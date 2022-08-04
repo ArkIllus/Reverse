@@ -7,7 +7,7 @@ public class E_Player : Entity
     //// wrapper类通用组件
     //public C_Rigidbody2DProxy rigidbody2DWrapper;
     //public C_AnimatorProxy animatorProxy;
-    //public C_Transform2DProxy transform2DProxy;
+    public C_Transform2DProxy transform2DProxy;
 
     //// physics类通用组件
     public C_HSpeedUp hSpeedUp;
@@ -37,7 +37,7 @@ public class E_Player : Entity
     //public FootDust footDust;
     //public HairFlow hairFlow;
     //public HairSprite hairSprite;
-    //public PlayerPause playerPause;
+    public PlayerPause playerPause;
 
     //public PlatformCollider platformCollider;
 
@@ -54,11 +54,11 @@ public class E_Player : Entity
 
     //// 瞬间移动（非物理移动）
     //// 物理移动应去改变Rigidbody的velocity
-    //public void SetPosition(Vector2 position)
-    //{
-    //    transform2DProxy.pos = position;
-    //    hairFlow.ResetPlace();
-    //}
+    public void SetPosition(Vector2 position)
+    {
+        transform2DProxy.pos = position;
+        //hairFlow.ResetPlace();
+    }
 
     //// 完全恢复冲刺速度
     //public bool ResumeDashCount()
@@ -83,6 +83,8 @@ public class E_Player : Entity
     {
         // 玩家输入指令更新
         command.CommandSystem();
+
+        if (playerPause.isPaused) return;
 
         // 更新碰撞相关的状态变量
         colliderChecker.ColliderCheckerSystem();
