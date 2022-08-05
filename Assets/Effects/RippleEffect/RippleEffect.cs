@@ -129,6 +129,7 @@ public class RippleEffect : MonoBehaviour
 
     public void Emit(Vector2 pos)
     {
+        Debug.Log("RippleEffect Emit");
         droplets[dropCount++ % droplets.Length].Reset(pos);
     }
 

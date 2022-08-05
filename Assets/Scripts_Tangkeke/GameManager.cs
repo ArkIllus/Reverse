@@ -13,7 +13,7 @@ public class GameManager : EntitySingleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        //Ëø¶¨60Ö¡
-        Application.targetFrameRate = 60;
+        //Ëø¶¨120Ö¡
+        Application.targetFrameRate = 120;
     }
 }

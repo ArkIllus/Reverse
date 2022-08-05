@@ -649,6 +649,8 @@ namespace TarodevController {
                     if (i == 1) {
                         if (_currentVerticalSpeed < 0) _currentVerticalSpeed = 0;
                         var dir = transform.position - hit.transform.position;
+                        Debug.Log(dir);
+                        Debug.Log(move);
                         transform.position += dir.normalized * move.magnitude;
                     }
            
