@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e039d8bdf96f2cd49ae2d5eeb7907b32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameManager: {fileID: 0}
   _currentVerticalSpeed: 0
   _characterBounds:
     m_Center: {x: 0, y: 0, z: 0}
