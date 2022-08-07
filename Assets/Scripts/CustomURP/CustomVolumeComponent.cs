@@ -13,11 +13,14 @@ public enum CustomPostProcessInjectionPoint
     AfterPostProcess //内置后处理之后
 }
 
+//首先要确保自定义的后处理组件能显示在Volume的Add Override菜单中，阅读源码可知，
+//让组件出现在这个菜单中并没有什么神奇之处，只需继承VolumeComponent类并且添加VolumeComponentMenu特性即可，
+//而VolumeComponent本质上是一个ScriptableObject。
 public abstract class CustomVolumeComponent : VolumeComponent, IPostProcessComponent, IDisposable
 {
     public BoolParameter isActive = new BoolParameter(false);
 
-    // 插入位置
+    // 插入位置（默认：AfterPostProcess）
     public virtual CustomPostProcessInjectionPoint InjectionPoint => CustomPostProcessInjectionPoint.AfterPostProcess;
 
     //在同一个插入点可能会存在多个后处理组件，所以还需要一个排序编号来确定谁先谁后：
@@ -29,6 +32,7 @@ public abstract class CustomVolumeComponent : VolumeComponent, IPostProcessCompo
 
     //[核心]Core
     // 执行渲染
+    //渲染方法中，将CommandBuffer、RenderingData、渲染源与目标都传入：
     public abstract void Render(CommandBuffer cmd, ref RenderingData renderingData, RenderTargetIdentifier source, RenderTargetIdentifier destination);
 
     #region IPostProcessComponent

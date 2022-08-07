@@ -54,7 +54,7 @@ namespace TarodevController {
 
 
 
-
+        public DashWave dashWave;
 
 
 
@@ -64,6 +64,7 @@ namespace TarodevController {
             Invoke(nameof(Activate), 0.5f);
 
             _playerAnimator = GetComponentInChildren<PlayerAnimator>();
+            dashWave = GetComponent<DashWave>();
         }
         void Activate() =>  _active = true;
         
@@ -278,6 +279,7 @@ namespace TarodevController {
             }
             if (!Input.Dash||isDashing||dashCount<=0)
             {
+                dashWave.DashUpdate(false);
                 return;
             }
 
@@ -293,15 +295,13 @@ namespace TarodevController {
             
             _currentHorizontalSpeed = dashSpeed * direction.x;
             _currentVerticalSpeed = dashSpeed * direction.y;
+            //TODO:为什么没有震动
             Camera.main.transform.DOComplete();
             Camera.main.transform.DOShakePosition(.2f, .5f, 14, 90, false, true);
-            //TODO:优化FindObjectOfType
+
             //FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
-
-
-
-
-
+            //播放冲刺特效
+            dashWave.DashUpdate(true);
         }
 
 

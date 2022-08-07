@@ -8,7 +8,8 @@ using UnityEngine.Rendering.Universal;
 //官方示例中，一个Renderer Feature对应一个自定义后处理效果，各个后处理相互独立，好处是灵活自由易调整；
 //坏处也在此，相互独立意味着每个效果都可能要开临时RT，耗费资源比双缓冲互换要多，
 //并且Renderer Feature在Renderer Data下，相对于场景中的Volume来说在代码中调用起来反而没那么方便。
-//那么这里的思路便是将所有相同插入点的后处理组件放到同一个Render Pass下渲染，这样就可以做到双缓冲交换，又保持了Volume的优势。
+//那么这里的思路便是将所有相同插入点的后处理组件放到同一个Render Pass下渲染，
+//这样就可以做到双缓冲交换，又保持了Volume的优势。
 
 public class CustomPostProcessRenderPass : ScriptableRenderPass
 {
@@ -18,9 +19,11 @@ public class CustomPostProcessRenderPass : ScriptableRenderPass
     string profilerTag;
     List<ProfilingSampler> profilingSamplers; // 每个组件对应的ProfilingSampler
 
-    RenderTargetHandle source;  // 当前源与目标
+    // 当前渲染源与目标
+    RenderTargetHandle source;
     RenderTargetHandle destination;
-    RenderTargetHandle tempRT0; // 临时RT
+    // 临时RT
+    RenderTargetHandle tempRT0;
     RenderTargetHandle tempRT1;
 
     /// <param name="profilerTag">Profiler标识</param>
@@ -43,7 +46,7 @@ public class CustomPostProcessRenderPass : ScriptableRenderPass
     // 你不需要手动调用ScriptableRenderContext.submit，渲染管线会在特定位置调用它。
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
     {
-        Debug.Log("Execute");
+        //Debug.Log("Execute");
         var cmd = CommandBufferPool.Get(profilerTag);
         context.ExecuteCommandBuffer(cmd);
         cmd.Clear();
@@ -111,6 +114,11 @@ public class CustomPostProcessRenderPass : ScriptableRenderPass
     /// 设置后处理组件
     /// </summary>
     /// <returns>是否存在有效组件</returns>
+    /// 
+    /// 上面在CustomPostProcessRenderPass中定义了一个变量activeComponents来存储当前可用的的后处理组件，
+    /// 在Render Feature的AddRenderPasses中，需要先判断Render Pass中是否有组件处于激活状态，
+    /// 如果没有一个组件激活，那么就没必要添加这个Render Pass，这里调用先前在组件中定义好的Setup方法初始化，
+    /// 随后调用IsActive判断其是否处于激活状态：
     public bool SetupComponents()
     {
         //Debug.Log("SetupComponents");
@@ -129,9 +137,12 @@ public class CustomPostProcessRenderPass : ScriptableRenderPass
     /// <summary>
     /// 设置渲染源和渲染目标
     /// </summary>
+    /// 
+    /// 当一个Render Pass中有处于激活状态的组件时，说明它行，很有精神，可以加入到队列中，
+    /// 那么需要设置它的渲染源与目标：
     public void Setup(RenderTargetHandle source, RenderTargetHandle destination)
     {
-        Debug.Log("Setup");
+        //Debug.Log("Setup");
         this.source = source;
         this.destination = destination;
     }

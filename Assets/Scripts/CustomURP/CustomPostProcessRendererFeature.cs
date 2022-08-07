@@ -21,6 +21,7 @@ public class CustomPostProcessRendererFeature : ScriptableRendererFeature
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
         //Debug.Log("AddRenderPasses");
+
         //CustomPostProcessRenderPass中定义了一个变量activeComponents来存储当前可用的的后处理组件，
         //在Render Feature的AddRenderPasses中，需要先判断Render Pass中是否有组件处于激活状态，
         //如果没有一个组件激活，那么就没必要添加这个Render Pass，
@@ -75,7 +76,7 @@ public class CustomPostProcessRendererFeature : ScriptableRendererFeature
         beforePostProcess = new CustomPostProcessRenderPass("Custom PostProcess before PostProcess", beforePostProcessComponents);
         beforePostProcess.renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
 
-        //[核心]
+        //----------------------[核心]----------------------
         var afterPostProcessComponents = components
             .Where(c => c.InjectionPoint == CustomPostProcessInjectionPoint.AfterPostProcess)
             .OrderBy(c => c.OrderInPass)
@@ -85,7 +86,9 @@ public class CustomPostProcessRendererFeature : ScriptableRendererFeature
         afterPostProcess.renderPassEvent = RenderPassEvent.AfterRendering;
 
         // 初始化用于after PostProcess的render target
+        //定义afterPostProcessTexture变量的目的便是为了能获取到_AfterPostProcessTexture，处理后再渲染到它。
         afterPostProcessTexture.Init("_AfterPostProcessTexture");
+        //----------------------[核心]----------------------
     }
 
     //资源释放

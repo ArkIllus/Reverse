@@ -10,30 +10,43 @@ public class DashWave : MonoBehaviour
     private CenterWaveVolumeComponent centerWave;
 
     private bool isWave;
-    private bool isMoving;
     [SerializeField]
     private float MoveDistance;
 
     void Start()
     {
-        //[注]：需要放在第一个
-        centerWave = volume.profile.components[0] as CenterWaveVolumeComponent;
+        ////[注]：不再需要放在第一个
+        for (int i = 0; i < volume.profile.components.Count; ++i)
+        {
+            if (volume.profile.components[i].GetType() == typeof(CenterWaveVolumeComponent))
+            {
+                centerWave = volume.profile.components[i] as CenterWaveVolumeComponent;
+                //Debug.Log("found " + i);
+            }
+        }
+
+        //TODO:残影
     }
 
-    void Update()
+    //TODO:问题：只能有一个波纹
+    public void DashUpdate(bool startDashEffect)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (startDashEffect)
         {
-            Camera.main.DOShakePosition(0.5f, 0.1f);
+            //在PlayerController中进行
+            //Camera.main.DOShakePosition(0.5f, 0.1f);
+
             centerWave.isActive.SetValue(new BoolParameter(true));
             centerWave.CenterPos.SetValue(new Vector2Parameter(Camera.main.WorldToViewportPoint(transform.position)));
+
             isWave = true;
-            //isMoving = true;
+            //isDashing = true;
+
+            //TODO:残影
             //StartCoroutine(ShowShadow());
+            Debug.Log("dash centerWave Start!");
         }
-        //if (isMoving)
-        //{
-        //}
+
         if (isWave)
         {
             //波纹移动距离<最大距离
@@ -45,8 +58,8 @@ public class DashWave : MonoBehaviour
             {
                 isWave = false;
                 MoveDistance = 0; //置零MoveDistance
+                Debug.Log("dash centerWave End!");
             }
-            Debug.Log("dash centerWave");
             centerWave.MoveDistance.SetValue(new FloatParameter(MoveDistance));
         }
     }
@@ -54,6 +67,5 @@ public class DashWave : MonoBehaviour
     //TODO:残影
     //IEnumerator ShowShadow()
     //{
-    //centerWave.CenterPos.SetValue(new Vector2Parameter(Camera.main.WorldToViewportPoint(transform.position)));
     //}
 }
