@@ -31,7 +31,7 @@ public class Room : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("this.name = " + this.name + "collision.tag = " + collision.tag);
+        Debug.Log("this.name = " + this.name + ", collision.tag = " + collision.tag);
         if (collision.tag == "Player")
         {
             OnTriggerExitEvent.Invoke();

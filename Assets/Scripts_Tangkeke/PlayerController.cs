@@ -295,7 +295,8 @@ namespace TarodevController {
             _currentVerticalSpeed = dashSpeed * direction.y;
             Camera.main.transform.DOComplete();
             Camera.main.transform.DOShakePosition(.2f, .5f, 14, 90, false, true);
-            FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
+            //TODO:”≈ªØFindObjectOfType
+            //FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
 
 
 

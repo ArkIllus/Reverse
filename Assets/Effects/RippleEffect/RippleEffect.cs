@@ -31,9 +31,11 @@ public class RippleEffect : MonoBehaviour
     [Range(0.0f, 2.0f)]
     public float dropInterval = 0.5f;
 
-    [SerializeField, HideInInspector]
-    Shader shader;
+    //[SerializeField, HideInInspector]
+    //Shader shader;
+    public Shader shader;
 
+    //内嵌类
     class Droplet
     {
         Vector2 position;
@@ -63,10 +65,12 @@ public class RippleEffect : MonoBehaviour
 
     Droplet[] droplets;
     Texture2D gradTexture;
+    //public Material material;
     Material material;
     float timer;
     int dropCount;
 
+    //更新Shader（材质material）参数
     void UpdateShaderParameters()
     {
         var c = GetComponent<Camera>();
@@ -82,11 +86,13 @@ public class RippleEffect : MonoBehaviour
 
     void Awake()
     {
+        //3维数组droplets
         droplets = new Droplet[3];
         droplets[0] = new Droplet();
         droplets[1] = new Droplet();
         droplets[2] = new Droplet();
 
+        //创建纹理Texture
         gradTexture = new Texture2D(2048, 1, TextureFormat.Alpha8, false);
         gradTexture.wrapMode = TextureWrapMode.Clamp;
         gradTexture.filterMode = FilterMode.Bilinear;
@@ -98,6 +104,7 @@ public class RippleEffect : MonoBehaviour
         }
         gradTexture.Apply();
 
+        //创建材质material
         material = new Material(shader);
         material.hideFlags = HideFlags.DontSave;
         material.SetTexture("_GradTex", gradTexture);
@@ -122,21 +129,24 @@ public class RippleEffect : MonoBehaviour
         UpdateShaderParameters();
     }
 
-    void OnRenderImage(RenderTexture source, RenderTexture destination)
-    {
-        Graphics.Blit(source, destination, material);
-    }
+    //在所有渲染完成后被调用，以对图片进行额外的渲染
+    //void OnRenderImage(RenderTexture source, RenderTexture destination)
+    //{
+    //    Debug.Log("OnRenderImage");
+    //    Graphics.Blit(source, destination, material);
+    //}
 
+    //产生冲刺波
     public void Emit(Vector2 pos)
     {
         Debug.Log("RippleEffect Emit");
         droplets[dropCount++ % droplets.Length].Reset(pos);
     }
 
-    IEnumerator Stop()
-    {
-        yield return new WaitForSeconds(.3f);
-
-    }
+    //未使用
+    //IEnumerator Stop()
+    //{
+    //    yield return new WaitForSeconds(.3f);
+    //}
 
 }
