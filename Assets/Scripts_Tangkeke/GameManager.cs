@@ -15,5 +15,6 @@ public class GameManager : EntitySingleton<GameManager>
         base.Awake();
         //Ëø¶¨120Ö¡
         Application.targetFrameRate = 120;
+        Time.timeScale = 1f;
     }
 }
