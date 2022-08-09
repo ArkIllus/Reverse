@@ -19,6 +19,8 @@ namespace TarodevController {
         public bool LandingThisFrame { get; }
         public Vector3 RawMovement { get; }
         public bool Grounded { get; }
+
+        public bool Dashed { get; }
     }
     
     public interface IExtendedPlayerController : IPlayerController {

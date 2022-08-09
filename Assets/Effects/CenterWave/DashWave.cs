@@ -44,7 +44,7 @@ public class DashWave : MonoBehaviour
 
             //TODO:≤–”∞
             //StartCoroutine(ShowShadow());
-            Debug.Log("dash centerWave Start!");
+            //Debug.Log("dash centerWave Start!");
         }
 
         if (isWave)
@@ -58,7 +58,7 @@ public class DashWave : MonoBehaviour
             {
                 isWave = false;
                 MoveDistance = 0; //÷√¡„MoveDistance
-                Debug.Log("dash centerWave End!");
+                //Debug.Log("dash centerWave End!");
             }
             centerWave.MoveDistance.SetValue(new FloatParameter(MoveDistance));
         }

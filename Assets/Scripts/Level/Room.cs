@@ -21,6 +21,7 @@ public class Room : MonoBehaviour
         OnTriggerExitEvent.AddListener(() => { confiner.gameObject.SetActive(false); });
     }
 
+    //需要具有rigidbody和collider才能触发OnTriggerEnter2D
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("this.name = " + this.name + ", collision.tag = " + collision.tag);
