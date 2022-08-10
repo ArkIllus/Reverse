@@ -62,6 +62,8 @@ namespace TarodevController {
 
         public bool CanReverse;
 
+        //Cinemachine
+        private Cinemachine.CinemachineImpulseSource impulseSource;
 
         void Awake()
         {
@@ -69,6 +71,7 @@ namespace TarodevController {
 
             _playerAnimator = GetComponentInChildren<PlayerAnimator>();
             dashWave = GetComponentInChildren<DashWave>();
+            impulseSource = GetComponent<Cinemachine.CinemachineImpulseSource>();
         }
 
         void Activate() =>  _active = true;
@@ -143,6 +146,7 @@ namespace TarodevController {
 
 
         #endregion
+
 
         #region Collisions
 
@@ -288,6 +292,7 @@ namespace TarodevController {
         }
         #endregion
 
+
         #region dash
         [Header("DASH")][SerializeField] private float dashSpeed = 40f;//冲刺速率
         
@@ -307,10 +312,10 @@ namespace TarodevController {
             if (isDashing)
             {
                 endTimer += Time.deltaTime;
-               //  currDashSpeed *= Mathf.Lerp(1, 0, endTimer_2 / duration_2);
-               // //currDashSpeed = 0;
-               // _currentHorizontalSpeed = currDashSpeed * currDirection_X;
-               // _currentVerticalSpeed = currDashSpeed * currDirection_Y;
+                //currDashSpeed *= Mathf.Lerp(1, 0, endTimer_2 / duration_2);
+                ////currDashSpeed = 0;
+                //_currentHorizontalSpeed = currDashSpeed * currDirection_X;
+                //_currentVerticalSpeed = currDashSpeed * currDirection_Y;
 
             }
             if (endTimer > (duration_1 - duration_2)) {
@@ -318,7 +323,7 @@ namespace TarodevController {
                 isDashing_Over = true;
                 // _currentHorizontalSpeed = Mathf.MoveTowards(_currentHorizontalSpeed, 0, _deAcceleration * Time.deltaTime);
                 _currentHorizontalSpeed -= currDashSpeed * currDirection_X * Time.deltaTime ;
-               // _currentVerticalSpeed += (currDashSpeed * currDirection_Y * -1* Mathf.Lerp(1, 0, endTimer_2 / duration_2));
+                //_currentVerticalSpeed += (currDashSpeed * currDirection_Y * -1 * Mathf.Lerp(1, 0, endTimer_2 / duration_2));
                 _currentVerticalSpeed -= currDashSpeed * currDirection_Y * Time.deltaTime;
             }
                 
@@ -359,14 +364,22 @@ namespace TarodevController {
             currDirection_Y = direction.y;
             _currentHorizontalSpeed = currDashSpeed * direction.x;
             _currentVerticalSpeed = currDashSpeed * direction.y;
-            Camera.main.transform.DOComplete();
-            Camera.main.transform.DOShakePosition(.2f, .5f, 14, 90, false, true);
 
-            //播放冲刺特效
+            //相机抖动
+            //[DOTween]使用cinemachine相机下，其Transform组件不可被代码修改
+            //Camera.main.transform.DOComplete();
+            //var tmp = Camera.main.transform.DOShakePosition(.2f, .5f, 14, 90, false, true);
+            //tmp.onComplete += () => { print("相机抖动完成"); };
+            //[Cinemachine]
+            impulseSource.GenerateImpulse();
+            //impulseSource.GenerateImpulse(Camera.main.transform.forward);
+
+            //播放冲刺屏幕波纹特效
             //FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
             dashWave.DashUpdate(true);
         }
         #endregion
+
 
         #region Walk
 
@@ -404,6 +417,7 @@ namespace TarodevController {
             }
         }
         #endregion
+
 
         #region Gravity
 
@@ -492,6 +506,7 @@ namespace TarodevController {
             }
         }
         #endregion
+
 
         #region Jump
         
@@ -587,6 +602,7 @@ namespace TarodevController {
         }
         #endregion
 
+
         #region Reverse
 
         // [Header("Reverse")] [SerializeField] private float _jumpHeight = 30;
@@ -653,6 +669,7 @@ namespace TarodevController {
         }
         #endregion
 
+
         #region Move
 
         [Header("MOVE")] [SerializeField, Tooltip("Raising this value increases collision accuracy at the cost of performance.")]
@@ -700,10 +717,120 @@ namespace TarodevController {
 
         #endregion
 
+
         #region Die
+
+        [Header("Death")]
+        // 是否处于死亡状态
+        public bool isDead;
+        // 死亡动画是否完成
+        public bool isDeathAnimFinish;
+
         public void Die()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            if (isDead) return;
+            Debug.Log("Die");
+            //TODO 死亡无法移动
+            isDead = true;
+
+            // 隐藏Player(Sprite)
+            Hide();
+
+            // 产生Death动画预制体（播放完后自动销毁）
+            //var dust = S_Dust_Factory.Instance.CreateDust(transform.position);
+            //dust.AddObserver(this);
+
+            //TODO 完善死亡效果
+            temp_DeathAndRebirth();
+
+            // 相机抖动
+            //S_MainCamera.Instance.Shake(C_CameraShake.ShakeType.Die);
+
+            //TODO 死亡后重载场景 or ...
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+            //恢复正常重力
+            GameManager.Instance.isReverse = false;
+        }
+        public void temp_DeathAndRebirth()
+        {
+            OnDeathAnimFinish();
+
+            OnRebirthAnimFinish();
+        }
+
+        public void OnDustDestroy()
+        {
+            if (!isDeathAnimFinish)
+            {
+                OnDeathAnimFinish();
+            }
+            else
+            {
+                OnRebirthAnimFinish();
+            }
+        }
+
+        public void OnDeathAnimFinish()
+        {
+            Debug.Log("OnDeathAnimFinish");
+            // 重新设置Player的位置
+            transform.position = GameManager.Instance.playerRebirthPlace.position;
+            //m_Rigidbody2DWrapper.Resume();
+            // 产生Rebirth动画预制体（播放完成后自动销毁）
+            //var dust = S_Dust_Factory.Instance.CreateDust(transform.position);
+            //dust.AddObserver(this);
+            isDeathAnimFinish = true;
+        }
+
+        public void OnRebirthAnimFinish()
+        {
+            Debug.Log("OnRebirthAnimFinish");
+            // 显示Player
+            Show();
+            // 重设死亡状态
+            isDead = false;
+            isDeathAnimFinish = false;
+        }
+        #endregion
+
+
+        #region Show and Hide player sprite
+
+        [Header("Show and Hide sprite")]
+        // 玩家是否暂停
+        public bool isPaused;
+
+        // 玩家是否在暂停的基础上进行了隐藏
+        // 如果玩家是隐藏的，那么必然也是暂停的
+        public bool isHidden { get; private set; }
+
+        // 隐藏Player(Sprite)
+        public void Hide()
+        {
+            if (isHidden) return;
+            var srList = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var sr in srList)
+            {
+                sr.enabled = false;
+            }
+
+            isPaused = true;
+            isHidden = true;
+        }
+
+        // 显示Player(Sprite)
+        public void Show()
+        {
+            if (!isHidden) return;
+            var srList = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var sr in srList)
+            {
+                sr.enabled = true;
+            }
+
+            isPaused = false;
+            isHidden = false;
         }
         #endregion
     }

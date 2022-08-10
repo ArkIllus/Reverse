@@ -43,10 +43,11 @@ public class UIManager : BaseManager<UIManager>
 
     public UIManager()
     {
+        //TODO: 只有一个Canvas不好，不方便动静分离
         //创建Canvas 让其过场景的时候不被移除
-        GameObject obj = ResourceManager.GetInstance().Load<GameObject>(path_UI + "Canvas");
-        canvas = obj.transform as RectTransform;
-        GameObject.DontDestroyOnLoad(obj);
+        GameObject objCanvas = ResourceManager.GetInstance().Load<GameObject>(path_UI + "Canvas");
+        canvas = objCanvas.transform as RectTransform;
+        GameObject.DontDestroyOnLoad(objCanvas);
 
         //找到各层
         bot = canvas.Find("Bot");
@@ -55,8 +56,8 @@ public class UIManager : BaseManager<UIManager>
         system = canvas.Find("System");
 
         //创建EventSystem 让其过场景的时候不被移除
-        obj = ResourceManager.GetInstance().Load<GameObject>(path_UI + "EventSystem");
-        GameObject.DontDestroyOnLoad(obj);
+        objCanvas = ResourceManager.GetInstance().Load<GameObject>(path_UI + "EventSystem");
+        GameObject.DontDestroyOnLoad(objCanvas);
     }
 
     /// <summary>

@@ -24,7 +24,7 @@ public class Room : MonoBehaviour
     //需要具有rigidbody和collider才能触发OnTriggerEnter2D
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("this.name = " + this.name + ", collision.tag = " + collision.tag);
+        //Debug.Log("this.name = " + this.name + ", collision.tag = " + collision.tag);
         if (collision.tag == "Player")
         {
             OnTriggerEnterEvent.Invoke();
@@ -32,7 +32,7 @@ public class Room : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("this.name = " + this.name + ", collision.tag = " + collision.tag);
+        //Debug.Log("this.name = " + this.name + ", collision.tag = " + collision.tag);
         if (collision.tag == "Player")
         {
             OnTriggerExitEvent.Invoke();
