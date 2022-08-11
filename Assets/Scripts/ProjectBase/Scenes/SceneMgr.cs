@@ -18,7 +18,7 @@ public class SceneMgr : BaseManager<SceneMgr>
     }
 
     //提供给外部的 异步加载的接口方法
-    public void LoadSceneAsync(string name, UnityAction fun)
+    public void LoadSceneAsync(string name, UnityAction fun = null)
     {
         // 场景异步加载
         // 为何不直接SceneManager.LoadSceneAsync(name);???
@@ -26,7 +26,7 @@ public class SceneMgr : BaseManager<SceneMgr>
     }
 
     //协程异步加载场景
-    private IEnumerator ReallyLoadSceneAsync(string name, UnityAction fun)
+    private IEnumerator ReallyLoadSceneAsync(string name, UnityAction fun = null)
     {
         AsyncOperation ao = SceneManager.LoadSceneAsync(name);
         while (!ao.isDone)
@@ -39,6 +39,7 @@ public class SceneMgr : BaseManager<SceneMgr>
         yield return ao;
 
         //加载完成过后 才会执行fun
-        fun();
+        if (fun != null)
+            fun();
     }
 }

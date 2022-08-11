@@ -47,7 +47,11 @@ public class BasePanel : MonoBehaviour
     {
 
     }
-    //InputField...
+    //用于自动注册InputField的onEndEdit事件
+    protected virtual void OnEndEdit_Inputfield(string inputfieldName, string str)
+    {
+
+    }
 
     //查找所有T类型的控件并添加到字典
     private void FindChildrenControl<T>() where T: UIBehaviour
@@ -70,9 +74,11 @@ public class BasePanel : MonoBehaviour
             {
                 (controls[i] as Button).onClick.AddListener(() =>
                 {
+                    //Debug.Log((controls[i] as Button).name);
                     OnClick(objName);
                 });
             }
+            //如果是Toggle控件
             else if (controls[i] is Toggle)
             {
                 (controls[i] as Toggle).onValueChanged.AddListener((value) =>
@@ -80,12 +86,16 @@ public class BasePanel : MonoBehaviour
                     OnValueChanged_toggle(objName, value);
                 });
             }
+            //如果是InputField控件
             else if (controls[i] is InputField)
             {
-                //TODO
                 //(controls[i] as InputField).onValueChanged.AddListener((value) =>
                 //{
                 //});
+                (controls[i] as InputField).onEndEdit.AddListener((str) =>
+                {
+                    OnEndEdit_Inputfield(objName, str);
+                });
             }
             //...
         }

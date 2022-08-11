@@ -32,6 +32,7 @@ public class InputManager : BaseManager<InputManager>
         CheckKeyCode(KeyCode.A);
         CheckKeyCode(KeyCode.S);
         CheckKeyCode(KeyCode.D);
+        CheckKeyCode(KeyCode.Escape);
     }
 
     /// <summary>

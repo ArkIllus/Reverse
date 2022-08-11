@@ -19,6 +19,6 @@ public class TestUI : MonoBehaviour
 
     public void Hide()
     {
-        UIManager.GetInstance().HidePanel(gameExternalMainPanel);
+        UIManager.GetInstance().HideAndDestroyPanel(gameExternalMainPanel);
     }
 }

@@ -94,7 +94,7 @@ public class EventCenter : BaseManager<EventCenter> //EventCenter<T>就不行了，泛
     /// 事件触发
     /// </summary>
     /// <param name="name">事件名</param>
-    /// <param name="info"></param>
+    /// <param name="info">信息(如:按键)</param>
     public void EventTrigger<T>(string name, T info)
     {
         if (eventDic.ContainsKey(name))
@@ -109,7 +109,7 @@ public class EventCenter : BaseManager<EventCenter> //EventCenter<T>就不行了，泛
     /// 事件触发(重载 不需要参数的事件)
     /// </summary>
     /// <param name="name">事件名</param>
-    /// <param name="info"></param>
+    /// <param name="info">信息(如:按键)</param>
     public void EventTrigger(string name)
     {
         if (eventDic.ContainsKey(name))

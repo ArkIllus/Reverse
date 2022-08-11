@@ -46,6 +46,14 @@ public class UIManager : BaseManager<UIManager>
         //TODO: 只有一个Canvas不好，不方便动静分离
         //创建Canvas 让其过场景的时候不被移除
         GameObject objCanvas = ResourceManager.GetInstance().Load<GameObject>(path_UI + "Canvas");
+
+        Canvas _canvas = objCanvas.GetComponent<Canvas>();
+#if UNITY_EDITOR
+        if (_canvas == null)
+            Debug.LogError("no canvas");
+#endif
+        _canvas.worldCamera = Camera.main;
+
         canvas = objCanvas.transform as RectTransform;
         GameObject.DontDestroyOnLoad(objCanvas);
 
@@ -104,11 +112,18 @@ public class UIManager : BaseManager<UIManager>
             //设置相对位置和大小
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localScale = Vector3.one;
+            //TODO:真的要吗
             (obj.transform as RectTransform).offsetMax = Vector2.zero;
             (obj.transform as RectTransform).offsetMin = Vector2.zero;
 
             //得到预制体身上的面板脚本
             T panel = obj.GetComponent<T>();
+#if UNITY_EDITOR
+            if (panel == null)
+            {
+                Debug.LogError(obj.name + " panel not found!");
+            }
+#endif
             //处理 创建面板完成后 需要执行的事
             if (callBack != null)
             {
@@ -128,7 +143,7 @@ public class UIManager : BaseManager<UIManager>
     /// 缺点：频繁destroy可能会卡，即使是异步加载
     /// </summary>
     /// <param name="panelName"></param>
-    public void HidePanel(string panelName)
+    public void HideAndDestroyPanel(string panelName)
     {
         if (panelDic.ContainsKey(panelName))
         {
