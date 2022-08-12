@@ -64,6 +64,8 @@ public class Init_LoginPanel : BasePanel
 
         //直接隐藏此panel
         HideMe();
+        //显示标题
+        UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
 
         //显示Init_1stPanel
         UIManager.GetInstance().ShowPanel<Init_1stPanel>(str_Init1stPanel, E_UI_Layer.Mid);
@@ -110,12 +112,12 @@ public class Init_LoginPanel : BasePanel
     
     public void ShowTip_format()
     {
-        textTip.text = "密码格式错误";
+        textTip.text = "Password format error";
         textTip.gameObject.SetActive(true);
     }
     public void ShowTip_error()
     {
-        textTip.text = "用户名或密码错误";
+        textTip.text = "Username or password error";
         textTip.gameObject.SetActive(true);
     }
     public void HideTip()

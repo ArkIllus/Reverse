@@ -66,6 +66,6 @@ public class External_UserInfoPanel : BasePanel
         //
         HideMe();
         UIManager.GetInstance().GetPanel<External_BgPicPanel>("External_BgPicPanel").HideMe();
-        UIManager.GetInstance().GetPanel<External_MainPanel>("External_MainPanel").ShowMe();
+        UIManager.GetInstance().GetPanel<Init_MainPanel>("Init_MainPanel").ShowMe();
     }
 }

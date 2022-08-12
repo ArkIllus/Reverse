@@ -72,6 +72,9 @@ public class Init_1stPanel : BasePanel
         //直接隐藏此panel
         HideMe();
 
+        //隐藏标题
+        UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").HideTitle();
+
         UIManager.GetInstance().ShowPanel<Init_LoginPanel>(str_Init_LoginPanel, E_UI_Layer.Mid);
 
         //TODO：二次开始游戏，已记住密码，进入游戏外主界面

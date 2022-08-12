@@ -4,28 +4,24 @@ using UnityEngine;
 
 public class Init_UI : PanelsGroup
 {
-    public const string str_InitBgPicPanel = "Init_BgPicPanel";
-    public const string str_Init1stPanel = "Init_1stPanel";
-    public const string str_Init_LoginPanel = "Init_LoginPanel";
-    public const string str_Init_RegisterPanel = "Init_Init_RegisterPanel";
-
-    private void OnEnable()
+    //private void OnEnable()
+    private void Start() //在UIManager_MonoProxy的OnEnable()之后调用
     {
-        UIManager.GetInstance().ShowPanel<Init_BgPicPanel>(str_InitBgPicPanel, E_UI_Layer.Bot);
-        UIManager.GetInstance().ShowPanel<Init_1stPanel>(str_Init1stPanel, E_UI_Layer.Mid);
+        UIManager.GetInstance().ShowPanel<Init_BgPicPanel>("Init_BgPicPanel", E_UI_Layer.Bot);
+        UIManager.GetInstance().ShowPanel<Init_1stPanel>("Init_1stPanel", E_UI_Layer.Mid);
     }
 
-    public static void HideAndDestroyAllPanels()
+    public static void HidePanels()
     {
-        UIManager.GetInstance().HideAndDestroyPanel(str_InitBgPicPanel);
-        UIManager.GetInstance().HideAndDestroyPanel(str_Init1stPanel);
-        UIManager.GetInstance().HideAndDestroyPanel(str_Init_LoginPanel);
-        UIManager.GetInstance().HideAndDestroyPanel(str_Init_RegisterPanel);
+        UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").HideMe();
+        UIManager.GetInstance().GetPanel<Init_1stPanel>("Init_1stPanel").HideMe();
+        UIManager.GetInstance().GetPanel<Init_LoginPanel>("Init_LoginPanel").HideMe();
+        UIManager.GetInstance().GetPanel<Init_RegisterPanel>("Init_RegisterPanel").HideMe();
     }
     public static void HidePanelsAfterLogin()
     {
-        UIManager.GetInstance().HideAndDestroyPanel(str_Init1stPanel);
-        UIManager.GetInstance().HideAndDestroyPanel(str_Init_LoginPanel);
-        UIManager.GetInstance().HideAndDestroyPanel(str_Init_RegisterPanel);
+        UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").HideMe();
+        UIManager.GetInstance().GetPanel<Init_LoginPanel>("Init_LoginPanel").HideMe();
+        UIManager.GetInstance().GetPanel<Init_RegisterPanel>("Init_RegisterPanel").HideMe();
     }
 }

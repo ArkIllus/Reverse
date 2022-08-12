@@ -73,7 +73,7 @@ public class HttpClient : MonoBehaviour
                 //SceneMgr.GetInstance().LoadSceneAsync(SceneData_SO.externalScene);
                 //FindObjectOfType<External_UI>().gameObject.SetActive(true);
                 //External_UI.ShowPanelsAtStart();
-                UIManager.GetInstance().ShowPanel<External_MainPanel>("External_MainPanel", E_UI_Layer.Mid);
+                UIManager.GetInstance().ShowPanel<Init_MainPanel>("Init_MainPanel", E_UI_Layer.Mid);
             }
             else if (cm.MessageId == 3001) {
                 Debug.Log("Login fail");

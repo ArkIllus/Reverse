@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class TestUI : MonoBehaviour
 {
-    public const string gameExternalMainPanel = "GameExternalMainPanel";
 
     void Start()
     {
-        UIManager.GetInstance().ShowPanel<GameExternalMainPanel>(gameExternalMainPanel, E_UI_Layer.Mid, ShowPanelOver);
+        UIManager.GetInstance().ShowPanel<GameExternalMainPanel>("GameExternalMainPanel", E_UI_Layer.Mid, ShowPanelOver);
     }
 
     private void ShowPanelOver(GameExternalMainPanel panel)
@@ -19,6 +18,6 @@ public class TestUI : MonoBehaviour
 
     public void Hide()
     {
-        UIManager.GetInstance().HideAndDestroyPanel(gameExternalMainPanel);
+        UIManager.GetInstance().GetPanel<GameExternalMainPanel>("GameExternalMainPanel").HideMe();
     }
 }

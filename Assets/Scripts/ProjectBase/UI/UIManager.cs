@@ -25,10 +25,13 @@ public class UIManager : BaseManager<UIManager>
     //路径
     public static string path_UI = "UI/";
 
-    public Dictionary<string, BasePanel> panelDic = new Dictionary<string, BasePanel>();
+    //静态变量_canvas供外部使用
+    public static Dictionary<string, BasePanel> panelDic = new Dictionary<string, BasePanel>();
 
     //canvas供外部使用
     public RectTransform canvas;
+    //静态变量_canvas供外部使用，是否已有Canvas和EventSystem
+    public static Canvas _canvas;
 
     //面板从下到上分为4个层级
     private Transform bot;
@@ -43,19 +46,35 @@ public class UIManager : BaseManager<UIManager>
 
     public UIManager()
     {
+        //TODO:临时解决方法，判断是否已有Canvas和EventSystem
+        if (_canvas != null)
+        {
+            _canvas.worldCamera = Camera.main;
+            canvas = _canvas.transform as RectTransform;
+            GameObject.DontDestroyOnLoad(canvas.gameObject);
+            //找到各层
+            bot = canvas.Find("Bot");
+            mid = canvas.Find("Mid");
+            top = canvas.Find("Top");
+            system = canvas.Find("System");
+
+            GameObject.DontDestroyOnLoad(EventSystem.current.gameObject);
+            return;
+        }
+
         //TODO: 只有一个Canvas不好，不方便动静分离
         //创建Canvas 让其过场景的时候不被移除
-        GameObject objCanvas = ResourceManager.GetInstance().Load<GameObject>(path_UI + "Canvas");
+        GameObject obj = ResourceManager.GetInstance().Load<GameObject>(path_UI + "Canvas");
 
-        Canvas _canvas = objCanvas.GetComponent<Canvas>();
+        _canvas = obj.GetComponent<Canvas>();
 #if UNITY_EDITOR
         if (_canvas == null)
             Debug.LogError("no canvas");
 #endif
         _canvas.worldCamera = Camera.main;
 
-        canvas = objCanvas.transform as RectTransform;
-        GameObject.DontDestroyOnLoad(objCanvas);
+        canvas = obj.transform as RectTransform;
+        GameObject.DontDestroyOnLoad(obj);
 
         //找到各层
         bot = canvas.Find("Bot");
@@ -64,8 +83,8 @@ public class UIManager : BaseManager<UIManager>
         system = canvas.Find("System");
 
         //创建EventSystem 让其过场景的时候不被移除
-        objCanvas = ResourceManager.GetInstance().Load<GameObject>(path_UI + "EventSystem");
-        GameObject.DontDestroyOnLoad(objCanvas);
+        obj = ResourceManager.GetInstance().Load<GameObject>(path_UI + "EventSystem");
+        GameObject.DontDestroyOnLoad(obj);
     }
 
     /// <summary>
@@ -77,11 +96,13 @@ public class UIManager : BaseManager<UIManager>
     /// <param name="callBack">面板预制体创建成功后 你想做的事</param>
     public void ShowPanel<T>(string panelName, E_UI_Layer layer, UnityAction<T> callBack = null) where T: BasePanel
     {
+        Debug.Log("ShowPanel " + panelName);
         //如果已经加载了这个面板，避免重复加载
         //TODO: 可能存在的问题：异步加载，这个面板正在加载中，字典里还没有，
         //另一处地方又调用了ShowPanel，就可能重复加载
         if (panelDic.ContainsKey(panelName))
         {
+            Debug.Log("已存在 " + panelName);
             //调用panel的ShowMe方法
             panelDic[panelName].ShowMe();
             //处理 创建面板完成后 需要执行的事
@@ -92,6 +113,7 @@ public class UIManager : BaseManager<UIManager>
             return;
         }
 
+        Debug.Log("不存在 " + panelName);
         ResourceManager.GetInstance().LoadAsync<GameObject>(path_UI + panelName, (obj) =>
         {
             //设置父对象（4个层级之一）

@@ -39,6 +39,9 @@ public class Init_RegisterPanel : BasePanel
             case "ButtonBack":
                 ClickBack();
                 break;
+            case "ButtonCancel":
+                ClickCancel();
+                break;
         }
     }
 
@@ -51,6 +54,11 @@ public class Init_RegisterPanel : BasePanel
 
         //显示Init_LoginPanel
         UIManager.GetInstance().ShowPanel<Init_LoginPanel>(str_Init_LoginPanel, E_UI_Layer.Mid);
+    }
+    public void ClickCancel()
+    {
+        //TODO:...
+        ClickBack();
     }
     public void ClickRegisterAndLogin()
     {
@@ -113,17 +121,17 @@ public class Init_RegisterPanel : BasePanel
 
     public void ShowTip_exist()
     {
-        textTip.text = "用户名已存在";
+        textTip.text = "Username already exists";
         textTip.gameObject.SetActive(true);
     }
     public void ShowTip_format()
     {
-        textTip.text = "密码格式错误";
+        textTip.text = "Password format error";
         textTip.gameObject.SetActive(true);
     }
     public void ShowTip_diff()
     {
-        textTip.text = "两次密码不一致";
+        textTip.text = "Passwords inconsistent";
         textTip.gameObject.SetActive(true);
     }
     public void HideTip()

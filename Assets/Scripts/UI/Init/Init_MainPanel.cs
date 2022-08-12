@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class External_MainPanel : BasePanel
+public class Init_MainPanel : BasePanel
 {
     public override void ShowMe()
     {
@@ -57,7 +57,11 @@ public class External_MainPanel : BasePanel
         //直接隐藏此panel
         HideMe();
 
+        //显示标题
+        UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
+
         //TODO 跳出选择关卡界面
+        UIManager.GetInstance().ShowPanel<Init_SelectLevelPanel>("Init_SelectLevelPanel", E_UI_Layer.Mid);
     }
 
     public void ClickUserInfo()
