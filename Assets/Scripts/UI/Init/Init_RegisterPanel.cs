@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Init_RegisterPanel : BasePanel
 {
@@ -12,6 +13,30 @@ public class Init_RegisterPanel : BasePanel
     [SerializeField] private string passwordInput_Ensure;
     [SerializeField] private Text textTip;
 
+    public float fadeTime = 1f;
+    public CanvasGroup canvasGroup;
+    public RectTransform rectTransform;
+
+    #region 动效
+    public void PanelFadeIn()
+    {
+        canvasGroup.alpha = 0f;
+        rectTransform.transform.localPosition = new Vector3(0f, -1000f, 0f);
+        rectTransform.DOAnchorPos(new Vector2(0f, 0f), fadeTime, false).SetEase(Ease.OutElastic);
+        canvasGroup.DOFade(1, fadeTime);
+    }
+    public void PanelFadeOut()
+    {
+        canvasGroup.alpha = 1f;
+        rectTransform.transform.localPosition = new Vector3(0f, 0f, 0f);
+        rectTransform.DOAnchorPos(new Vector2(0f, -1000f), fadeTime, false).SetEase(Ease.InOutQuint);
+        Tweener tmp = canvasGroup.DOFade(0, fadeTime);
+
+        //并且SetActive(false)
+        tmp.onComplete += () => { this.gameObject.SetActive(false); };
+    }
+    #endregion
+
     private void OnEnable()
     {
         HideTip();
@@ -19,13 +44,21 @@ public class Init_RegisterPanel : BasePanel
 
     public override void ShowMe()
     {
-        //base.ShowMe();
         this.gameObject.SetActive(true);
+        PanelFadeIn();
     }
 
     public override void HideMe()
     {
-        //base.HideMe();
+        PanelFadeOut();
+    }
+    public override void ShowMe_noEffect()
+    {
+        this.gameObject.SetActive(true);
+    }
+
+    public override void HideMe_noEffect()
+    {
         this.gameObject.SetActive(false);
     }
 
@@ -49,11 +82,11 @@ public class Init_RegisterPanel : BasePanel
     {
         Debug.Log("ClickBack");
 
-        //直接隐藏此panel
-        HideMe();
+        //直接隐藏此panel 不包含动效
+        HideMe_noEffect();
 
         //显示Init_LoginPanel
-        UIManager.GetInstance().ShowPanel<Init_LoginPanel>(str_Init_LoginPanel, E_UI_Layer.Mid);
+        UIManager.GetInstance().ShowPanel<Init_LoginPanel>(str_Init_LoginPanel, E_UI_Layer.Mid, dynamicEffect: false);
     }
     public void ClickCancel()
     {

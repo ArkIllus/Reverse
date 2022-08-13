@@ -94,7 +94,7 @@ public class UIManager : BaseManager<UIManager>
     /// <param name="panelName">面板名</param>
     /// <param name="layer">显示在哪一层</param>
     /// <param name="callBack">面板预制体创建成功后 你想做的事</param>
-    public void ShowPanel<T>(string panelName, E_UI_Layer layer, UnityAction<T> callBack = null) where T: BasePanel
+    public void ShowPanel<T>(string panelName, E_UI_Layer layer, UnityAction<T> callBack = null, bool dynamicEffect = true) where T: BasePanel
     {
         Debug.Log("ShowPanel " + panelName);
         //如果已经加载了这个面板，避免重复加载
@@ -104,7 +104,10 @@ public class UIManager : BaseManager<UIManager>
         {
             Debug.Log("已存在 " + panelName);
             //调用panel的ShowMe方法
-            panelDic[panelName].ShowMe();
+            if (dynamicEffect)
+                panelDic[panelName].ShowMe();
+            else
+                panelDic[panelName].ShowMe_noEffect();
             //处理 创建面板完成后 需要执行的事
             if (callBack != null)
             {
@@ -153,7 +156,10 @@ public class UIManager : BaseManager<UIManager>
             }
 
             //调用panel的ShowMe方法
-            panel.ShowMe();
+            if (dynamicEffect)
+                panelDic[panelName].ShowMe();
+            else
+                panelDic[panelName].ShowMe_noEffect();
 
             //把面板存起来
             panelDic.Add(panelName, panel);

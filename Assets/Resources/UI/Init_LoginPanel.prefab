@@ -233,7 +233,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 36.24, y: -0.5}
+  m_AnchoredPosition: {x: 36.240005, y: -0.5}
   m_SizeDelta: {x: -92.48, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &815517169852002036
@@ -312,7 +312,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 36.24, y: -0.5}
+  m_AnchoredPosition: {x: 36.240005, y: -0.5}
   m_SizeDelta: {x: -92.48, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &815517169937497906
@@ -391,7 +391,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 36.24, y: -0.5}
+  m_AnchoredPosition: {x: 36.240005, y: -0.5}
   m_SizeDelta: {x: -92.48, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &815517169968677991
@@ -816,7 +816,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 36.24, y: -0.5}
+  m_AnchoredPosition: {x: 36.240005, y: -0.5}
   m_SizeDelta: {x: -92.48, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &815517171432864598
@@ -1014,13 +1014,14 @@ GameObject:
   m_Component:
   - component: {fileID: 3155324704585504126}
   - component: {fileID: 3212350737381427887}
+  - component: {fileID: 1285931200118882825}
   m_Layer: 5
   m_Name: Init_LoginPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3155324704585504126
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1030,7 +1031,7 @@ RectTransform:
   m_GameObject: {fileID: 1285931200937261720}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.009259259, y: 0.009259259, z: 0.009259259}
   m_Children:
   - {fileID: 815517170552607833}
   m_Father: {fileID: 0}
@@ -1056,6 +1057,21 @@ MonoBehaviour:
   usernameInput: 
   passwordInput: 
   textTip: {fileID: 815517169815192304}
+  fadeTime: 1
+  canvasGroup: {fileID: 1285931200118882825}
+  rectTransform: {fileID: 815517170552607833}
+--- !u!225 &1285931200118882825
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285931200937261720}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3284998827815896976
 GameObject:
   m_ObjectHideFlags: 0

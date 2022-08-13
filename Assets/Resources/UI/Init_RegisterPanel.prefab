@@ -593,6 +593,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1317623775524347328}
   - component: {fileID: 8807214985469655773}
+  - component: {fileID: 5383175360371060037}
   m_Layer: 5
   m_Name: Init_RegisterPanel
   m_TagString: Untagged
@@ -636,6 +637,21 @@ MonoBehaviour:
   passwordInput: 
   passwordInput_Ensure: 
   textTip: {fileID: 1029305244509673210}
+  fadeTime: 1
+  canvasGroup: {fileID: 5383175360371060037}
+  rectTransform: {fileID: 1029305244750064147}
+--- !u!225 &5383175360371060037
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317623775524347329}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1835407790517623250
 GameObject:
   m_ObjectHideFlags: 0

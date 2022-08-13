@@ -36,6 +36,15 @@ public class BasePanel : MonoBehaviour
     {
 
     }
+    public virtual void ShowMe_noEffect()
+    {
+
+    }
+    //隐藏 时需要做的事（会在UIManger的HidePanel中调用）
+    public virtual void HideMe_noEffect()
+    {
+
+    }
 
     //用于自动注册按钮onClick事件
     protected virtual void OnClick(string btnName)

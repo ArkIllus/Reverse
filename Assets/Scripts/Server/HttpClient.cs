@@ -66,13 +66,7 @@ public class HttpClient : MonoBehaviour
                 ///进行登录成功的处理
                 //记录返回的uid
                 GameManager_global.GetInstance().gameData_SO.uid = ua.Uid;
-                //卸载Init_XXX面板 //TODO:优化
-                //FindObjectOfType<Init_UI>().HideAndDestroyAllPanels();
                 Init_UI.HidePanelsAfterLogin();
-                ////异步加载ExternalScene  加载过程中播放转场画面（+进度条）
-                //SceneMgr.GetInstance().LoadSceneAsync(SceneData_SO.externalScene);
-                //FindObjectOfType<External_UI>().gameObject.SetActive(true);
-                //External_UI.ShowPanelsAtStart();
                 UIManager.GetInstance().ShowPanel<Init_MainPanel>("Init_MainPanel", E_UI_Layer.Mid);
             }
             else if (cm.MessageId == 3001) {
