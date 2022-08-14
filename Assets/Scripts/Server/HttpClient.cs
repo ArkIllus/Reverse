@@ -68,6 +68,8 @@ public class HttpClient : MonoBehaviour
                 GameManager_global.GetInstance().gameData_SO.uid = ua.Uid;
                 Init_UI.HidePanelsAfterLogin();
                 UIManager.GetInstance().ShowPanel<Init_MainPanel>("Init_MainPanel", E_UI_Layer.Mid);
+                //显示标题
+                UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
             }
             else if (cm.MessageId == 3001) {
                 Debug.Log("Login fail");

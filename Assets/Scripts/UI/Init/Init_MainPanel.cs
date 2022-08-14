@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Init_MainPanel : BasePanel
@@ -43,12 +44,14 @@ public class Init_MainPanel : BasePanel
         Debug.Log("ClickNewGame");
 
         //TODO 进入新的游戏 切换场景
+        throw new NotImplementedException();
     }
     public void ClickContinueGame()
     {
         Debug.Log("ClickContinueGame");
 
         //TODO 继续游戏 切换场景
+        throw new NotImplementedException();
     }
     public void ClickSelectLevel()
     {
@@ -60,7 +63,7 @@ public class Init_MainPanel : BasePanel
         //显示标题
         UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
 
-        //TODO 跳出选择关卡界面
+        //跳出选择关卡界面
         UIManager.GetInstance().ShowPanel<Init_SelectLevelPanel>("Init_SelectLevelPanel", E_UI_Layer.Mid);
     }
 
@@ -84,5 +87,8 @@ public class Init_MainPanel : BasePanel
         HideMe();
 
         UIManager.GetInstance().ShowPanel<Init_1stPanel>("Init_1stPanel", E_UI_Layer.Mid);
+
+        //显示标题
+        UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
     }
 }

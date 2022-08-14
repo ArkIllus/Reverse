@@ -13,7 +13,8 @@ public class Init_RegisterPanel : BasePanel
     [SerializeField] private string passwordInput_Ensure;
     [SerializeField] private Text textTip;
 
-    public float fadeTime = 1f;
+    public float fadeInTime = 0.8f;
+    public float fadeOutTime = 0.5f;
     public CanvasGroup canvasGroup;
     public RectTransform rectTransform;
 
@@ -22,15 +23,15 @@ public class Init_RegisterPanel : BasePanel
     {
         canvasGroup.alpha = 0f;
         rectTransform.transform.localPosition = new Vector3(0f, -1000f, 0f);
-        rectTransform.DOAnchorPos(new Vector2(0f, 0f), fadeTime, false).SetEase(Ease.OutElastic);
-        canvasGroup.DOFade(1, fadeTime);
+        rectTransform.DOAnchorPos(new Vector2(0f, 0f), fadeInTime, false).SetEase(Ease.OutElastic);
+        canvasGroup.DOFade(1, fadeInTime);
     }
     public void PanelFadeOut()
     {
         canvasGroup.alpha = 1f;
         rectTransform.transform.localPosition = new Vector3(0f, 0f, 0f);
-        rectTransform.DOAnchorPos(new Vector2(0f, -1000f), fadeTime, false).SetEase(Ease.InOutQuint);
-        Tweener tmp = canvasGroup.DOFade(0, fadeTime);
+        rectTransform.DOAnchorPos(new Vector2(0f, -1000f), fadeOutTime, false).SetEase(Ease.InOutQuint);
+        Tweener tmp = canvasGroup.DOFade(0, fadeOutTime);
 
         //²¢ÇÒSetActive(false)
         tmp.onComplete += () => { this.gameObject.SetActive(false); };
@@ -54,7 +55,10 @@ public class Init_RegisterPanel : BasePanel
     }
     public override void ShowMe_noEffect()
     {
+        Debug.Log("Init_RegisterPanel   ShowMe_noEffect");
         this.gameObject.SetActive(true);
+        canvasGroup.alpha = 1f;
+        rectTransform.transform.localPosition = new Vector3(0f, 0f, 0f);
     }
 
     public override void HideMe_noEffect()

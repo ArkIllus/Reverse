@@ -65,21 +65,27 @@ public class BezierController : MonoBehaviour
 
                 RectTransform rectTransform = obj.GetComponent<RectTransform>();
                 //尺寸渐变
-                // obj.BezierT 0.25 ~0.5 ~0.25
-                // localScale  1 ~1.5 ~1
-                if (obj.BezierT < 0.25f || obj.BezierT > 0.75f)
-                {
-                    rectTransform.localScale = Vector3.one;
-                }
-                else
-                {
-                    rectTransform.localScale = Vector3.one * (1.5f - Mathf.Abs(obj.BezierT - 0.5f) * 2f);
-                }
+                GradualScale(obj, rectTransform);
             }
             oldPos = Input.mousePosition;
         }
         #endregion
 
+    }
+
+    public void GradualScale(CarouselItem obj, RectTransform rectTransform)
+    {
+        //尺寸渐变
+        // obj.BezierT 0.25 ~0.5 ~0.25
+        // localScale  1 ~1.5 ~1
+        if (obj.BezierT < 0.25f || obj.BezierT > 0.75f)
+        {
+            rectTransform.localScale = Vector3.one;
+        }
+        else
+        {
+            rectTransform.localScale = Vector3.one * (1.5f - Mathf.Abs(obj.BezierT - 0.5f) * 2f);
+        }
     }
 
     #region 初始化item平均布局
@@ -107,16 +113,7 @@ public class BezierController : MonoBehaviour
             RectTransform rectTransform = obj.GetComponent<RectTransform>();
             rectTransform.anchoredPosition3D = _pos;
             //尺寸渐变
-            // obj.BezierT 0 ~0.5 ~1
-            // localScale  1 ~1.5 ~1
-            if (obj.BezierT < 0.3f)
-            {
-                rectTransform.localScale = Vector3.one;
-            }
-            else
-            {
-                rectTransform.localScale = Vector3.one * (1.5f - Mathf.Abs(obj.BezierT - 0.5f));
-            }
+            GradualScale(obj, rectTransform);
             SetImageSprite(1, obj); //修改图片
         }
     }
