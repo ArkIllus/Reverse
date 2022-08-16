@@ -18,6 +18,28 @@ public class Init_BgPicPanel : BasePanel
 
     public float fadeTime = 0.8f;
 
+    private void Start()
+    {
+        //SetImage_normalMat();
+        imageBackground.color = new Color(imageBackground.color.r, imageBackground.color.g, imageBackground.color.b, 0);
+        imageBackground2.color = new Color(imageBackground2.color.r, imageBackground2.color.g, imageBackground2.color.b, 1);
+        imageGameTitle.color = new Color(imageGameTitle.color.r, imageGameTitle.color.g, imageGameTitle.color.b, 0);
+        imageGameTitle.gameObject.SetActive(false);
+
+        //Image imageBtnStart = UIManager.GetInstance().GetPanel<Init_1stPanel>("Init_1stPanel").btnStart.GetComponent<Image>();
+        //imageBtnStart.color = new Color(imageBtnStart.color.r, imageBtnStart.color.g, imageBtnStart.color.b, 0);
+
+        //ShowTitle();
+        Debug.Log("ShowTitle");
+        SetImage_effectMat();
+        imageGameTitle.gameObject.SetActive(true);
+        imageBackground.DOFade(1, 3);
+        imageGameTitle.DOFade(1, 3);
+        Tweener tmp = imageBackground2.DOFade(0, 3);
+
+        //imageBtnStart.DOFade(1, 3);
+    }
+
     //显示标题 消除模糊
     public void HideTitle()
     {

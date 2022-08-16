@@ -6,15 +6,17 @@ using DG.Tweening;
 
 public class DashWave : MonoBehaviour
 {
-    public Volume volume;
+    private Volume volume;
     private CenterWaveVolumeComponent centerWave;
 
     private bool isWave;
-    [SerializeField]
     private float MoveDistance;
 
     void Start()
+    //void OnEnable()
     {
+        volume = GameManager.Instance.volume;
+
         ////[注]：不再需要放在第一个
         for (int i = 0; i < volume.profile.components.Count; ++i)
         {

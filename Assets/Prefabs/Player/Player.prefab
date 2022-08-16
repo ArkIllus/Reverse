@@ -52,7 +52,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &3589847583615293490
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -19515,8 +19515,10 @@ GameObject:
   - component: {fileID: 7301912709272560722}
   - component: {fileID: 4328137886868611838}
   - component: {fileID: 2978122920626075806}
+  - component: {fileID: 7563479471177593468}
   - component: {fileID: 612006126077709931}
-  - component: {fileID: 373931108}
+  - component: {fileID: 1120116084}
+  - component: {fileID: 6397391522788283440}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -19556,10 +19558,13 @@ MonoBehaviour:
   _currentVerticalSpeed: 0
   thresHold: 0.1
   isDashing: 0
+  isTalking: 0
   endTimer: 0
   endTimer_2: 0
   isAdvancedEnd: 0
   CanReverse: 0
+  anim: {fileID: 4328137887041379177}
+  MovingGround: {fileID: 0}
   _characterBounds:
     m_Center: {x: 0, y: -0.03, z: 0}
     m_Extent: {x: 0.55, y: 0.87, z: 0}
@@ -19573,11 +19578,24 @@ MonoBehaviour:
   _colRight: 0
   _colDown: 0
   _colLeft: 0
+  _colUp_enemy: 0
+  _colRight_enemy: 0
+  _colDown_enemy: 0
+  _colLeft_enemy: 0
+  _colUp_ReverseGround: 0
+  _colDown_ReverseGround: 0
+  _colLeft_ReverseGround: 0
+  _colRight_ReverseGround: 0
+  _colUp_Moving: 0
+  _colRight_Moving: 0
+  _colDown_Moving: 0
+  _colLeft_Moving: 0
   dashSpeed: 30
   duration_1: 0.2
   duration_2: 0.05
   dashCount: 2
   dashMaxCount: 1
+  Dashdir: 0
   _acceleration: 90
   _moveClamp: 13
   _deAcceleration: 60
@@ -19599,6 +19617,8 @@ MonoBehaviour:
   _freeColliderIterations: 10
   isDead: 0
   isDeathAnimFinish: 0
+  Rebirth: {fileID: 0}
+  Rebirth_Reverse: 0
   isPaused: 0
 --- !u!61 &4328137886868611838
 BoxCollider2D:
@@ -19638,8 +19658,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67acc48a85add8e41963cffd5cd19bb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volume: {fileID: 0}
-  MoveDistance: 0
+--- !u!114 &7563479471177593468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7301912709272560723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcc5521b9c319de46a970ab8b97791b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRadius: 1
+  minRadius: 0
+  duration: 0.5
 --- !u!210 &612006126077709931
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -19651,7 +19684,7 @@ SortingGroup:
   m_SortingLayerID: 1840328353
   m_SortingLayer: 5
   m_SortingOrder: 0
---- !u!114 &373931108
+--- !u!114 &1120116084
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -19664,40 +19697,64 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ImpulseDefinition:
-    m_ImpulseChannel: -1
+    m_ImpulseChannel: 1
     m_RawSignal: {fileID: 11400000, guid: b424d2bbb369f344f9bc9012da55df71, type: 2}
-    m_AmplitudeGain: 6
+    m_AmplitudeGain: 1
     m_FrequencyGain: 1
     m_RepeatMode: 0
     m_Randomize: 1
     m_TimeEnvelope:
       m_AttackShape:
         serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
+        m_Curve: []
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_DecayShape:
         serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_AttackTime: 0
+      m_SustainTime: 0.2
+      m_DecayTime: 0.7
+      m_ScaleWithImpact: 1
+      m_HoldForever: 0
+    m_ImpactRadius: 100
+    m_DirectionMode: 0
+    m_DissipationMode: 2
+    m_DissipationDistance: 1000
+    m_PropagationSpeed: 343
+--- !u!114 &6397391522788283440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7301912709272560723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ImpulseDefinition:
+    m_ImpulseChannel: 1
+    m_RawSignal: {fileID: 11400000, guid: b424d2bbb369f344f9bc9012da55df71, type: 2}
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 1
+    m_RepeatMode: 0
+    m_Randomize: 1
+    m_TimeEnvelope:
+      m_AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_DecayShape:
+        serializedVersion: 2
+        m_Curve: []
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
@@ -19722,6 +19779,7 @@ GameObject:
   - component: {fileID: 7301912710596531849}
   - component: {fileID: 7301912710596531848}
   - component: {fileID: 4328137887041379177}
+  - component: {fileID: 697532279}
   m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
@@ -19788,7 +19846,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.28125, y: 1.78125}
+  m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -19813,6 +19871,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &697532279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7301912710596531850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 409a6c27818ea5646a828def88630c43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 4328137887041379177}
 --- !u!1 &8866899822576594758
 GameObject:
   m_ObjectHideFlags: 0

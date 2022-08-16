@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13027b1206d239748ac1a5de08bbf095, type: 3}
   m_Name: BlurVolumeComponent
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   isActive:
     m_OverrideState: 0
@@ -105,11 +105,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   components:
   - {fileID: -9208192854974024354}
+  - {fileID: 1419685929796078372}
   - {fileID: 4524724510212466723}
   - {fileID: -3030005372442838910}
   - {fileID: 6757827290568540320}
   - {fileID: 7932401353555463590}
   - {fileID: -7343339627832921267}
+--- !u!114 &1419685929796078372
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4ef9520b6ad3c4db8f956d17ddcb97, type: 3}
+  m_Name: CircleVolumeComponent
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  isActive:
+    m_OverrideState: 1
+    m_Value: 1
+  Radius:
+    m_OverrideState: 1
+    m_Value: 1
+  Center:
+    m_OverrideState: 1
+    m_Value: {x: 500, y: 500}
 --- !u!114 &4524724510212466723
 MonoBehaviour:
   m_ObjectHideFlags: 3

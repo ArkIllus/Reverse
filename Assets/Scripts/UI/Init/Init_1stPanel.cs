@@ -2,12 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Init_1stPanel : BasePanel
 {
-    [SerializeField] private Button btnStart;
+    public Button btnStart;
     [SerializeField] private Button btnEsc;
     public const string str_Init_LoginPanel = "Init_LoginPanel";
+
+    public float fadeInTime = 3.0f;
+    public float fadeOutTime = 0.5f;
+    public CanvasGroup canvasGroup;
+    public RectTransform rectTransform;
 
     #region 注册Esc输入的事件，仅在PC上有效
     private void OnEnable()
@@ -35,18 +41,32 @@ public class Init_1stPanel : BasePanel
     }
     #endregion
 
+    #region 动效
+    public void PanelFadeIn()
+    {
+        canvasGroup.alpha = 0f;
+        canvasGroup.DOFade(1, fadeInTime);
+    }
+    public void PanelFadeOut()
+    {
+        canvasGroup.alpha = 1f;
+        Tweener tmp = canvasGroup.DOFade(0, fadeOutTime);
 
+        //并且SetActive(false)
+        tmp.onComplete += () => { this.gameObject.SetActive(false); };
+    }
+    #endregion
     #region UI部分
     public override void ShowMe()
     {
-        //base.ShowMe();
-        this.gameObject.SetActive(true);
+        this.gameObject.SetActive(true); 
+        PanelFadeIn();
     }
 
     public override void HideMe()
     {
-        //base.HideMe();
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
+        PanelFadeOut();
     }
     protected override void OnClick(string btnName)
     {

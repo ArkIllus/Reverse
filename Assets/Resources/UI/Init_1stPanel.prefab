@@ -372,6 +372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8424996589166871291}
   - component: {fileID: 3968900523703323384}
+  - component: {fileID: 4993343540777843782}
   m_Layer: 5
   m_Name: Init_1stPanel
   m_TagString: Untagged
@@ -413,3 +414,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnStart: {fileID: 2353282439970998288}
   btnEsc: {fileID: 2353282439356613203}
+  fadeInTime: 3
+  fadeOutTime: 0.5
+  canvasGroup: {fileID: 4993343540777843782}
+  rectTransform: {fileID: 8424996589166871291}
+--- !u!225 &4993343540777843782
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8785863996237308141}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

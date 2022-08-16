@@ -3,8 +3,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using System.Collections;
 
-namespace TarodevController {
+namespace TarodevController
+{
     /// <summary>
     /// Hey!
     /// Tarodev here. I built this controller as there was a severe lack of quality & free 2D controllers out there.
@@ -12,7 +14,8 @@ namespace TarodevController {
     /// if there's enough interest. You can play and compete for best times here: https://tarodev.itch.io/
     /// If you hve any questions or would like to brag about your score, come to discord: https://discord.gg/GqeHHnhHpz
     /// </summary>
-    public class PlayerController : MonoBehaviour, IPlayerController {
+    public class PlayerController : MonoBehaviour, IPlayerController
+    {
         // Public for external hooks
 
         public Vector3 Velocity { get; private set; }
@@ -31,12 +34,25 @@ namespace TarodevController {
 
         private PlayerAnimator _playerAnimator;
 
+        public Vector3 LeftUp { get; private set; }
+
+        public Vector3 LeftDown { get; private set; }
+
+        public Vector3 RightUp { get; private set; }
+
+        public Vector3 RightDown { get; private set; }
+
+
+
+
+
+
         public bool Grounded => _colDown;
 
         public bool Dashed { get; private set; }
 
         private Vector3 _lastPosition;
-        public  float _currentHorizontalSpeed;
+        public float _currentHorizontalSpeed;
         public float _currentVerticalSpeed;
 
         // private float _currentVerticalSpeed_Fall;
@@ -44,26 +60,36 @@ namespace TarodevController {
         // This is horrible, but for some reason colliders are not fully established when update starts...
         private bool _active;
 
-        public float thresHold = 0.1f; //ÊäÈëãĞÖµ
+        public float thresHold = 0.1f; //è¾“å…¥é˜ˆå€¼
 
         //dash
-        // ´¦ÓÚ³å´Ì×´Ì¬
+        // å¤„äºå†²åˆºçŠ¶æ€
         public bool isDashing;
         private bool isDashing_Over = true;
 
         private DashWave dashWave;
 
-        // ½áÊø³å´Ì×´Ì¬µÄ¼ÆÊ±Æ÷
+        //æ­»äº¡
+        private DeathCircle deathCircle;
+
+        //è½¨è¿¹æ¸²æŸ“å™¨
+        private TrailRenderer trailRenderer;
+
+        //å¯¹è¯
+        public bool isTalking;
+
+        // ç»“æŸå†²åˆºçŠ¶æ€çš„è®¡æ—¶å™¨
         public float endTimer = 1f;
         public float endTimer_2;
 
-        // ·ÇÕı³£½áÊø(ÌáÇ°½áÊø³å´Ì)
+        // éæ­£å¸¸ç»“æŸ(æå‰ç»“æŸå†²åˆº)
         public bool isAdvancedEnd;
 
         public bool CanReverse;
 
         //Cinemachine
         private Cinemachine.CinemachineImpulseSource impulseSource;
+        public Animator anim;
 
         void Awake()
         {
@@ -71,10 +97,33 @@ namespace TarodevController {
 
             _playerAnimator = GetComponentInChildren<PlayerAnimator>();
             dashWave = GetComponentInChildren<DashWave>();
+            deathCircle = GetComponentInChildren<DeathCircle>();
             impulseSource = GetComponent<Cinemachine.CinemachineImpulseSource>();
+            Parent = transform.parent; 
+            trailRenderer = GetComponentInChildren<TrailRenderer>();
+            //trailRenderer.enabled = false;
         }
 
-        void Activate() =>  _active = true;
+        void Activate() => _active = true;
+
+        private void Start()
+        {
+            //è¯»å–ç©å®¶é‡ç”Ÿç‚¹ï¼Œè‹¥æœ‰åˆ™ç©å®¶åœ¨è¯¥ç‚¹ï¼ˆåªæ”¹ä½ç½®ï¼Œä¸è®¾é‡ç”Ÿç‚¹ï¼‰
+            if (GameManager_global.GetInstance().gameData_SO.rebirth_pos != Vector3.one)
+            {
+                transform.position = GameManager_global.GetInstance().gameData_SO.rebirth_pos;
+                GameManager.Instance.isReverse = GameManager_global.GetInstance().gameData_SO.rebirth_Reverse;
+            }
+
+            //å¼€å§‹æ—¶ï¼Œå±å¹•å…¨é»‘ï¼Œç„¶ååœˆä»å†…å‘å¤–å˜å¤§ï¼Œæ˜¾ç¤ºæ¸¸æˆç”»é¢
+            deathCircle.SetCircleMin();
+            Invoke(nameof(PlayCircleInToOut), 0.1f); //ä¸Invoke0.1ç§’çš„è¯å®¹æ˜“å¡æ‰æ²¡æ•ˆæœ
+        }
+
+        void PlayCircleInToOut()
+        {
+            StartCoroutine(deathCircle.PlayCircleInToOut());
+        }
 
         //private void OnEnable()
         //{
@@ -85,14 +134,23 @@ namespace TarodevController {
         //    GameManager.Instance.player = null;
         //}
 
-        private void Update() {
-            if(!_active) return;
+        private void Update()
+        {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Return))
+            {
+                //ä»å†…å‘å¤–æ’­æ”¾åœ†åœˆ
+                StartCoroutine(deathCircle.PlayCircleInToOut());
+            }
+
+            if (!_active) return;
+            if (isDead) return; //æ­»äº¡æ—¶ç¦ç”¨Updateï¼šäººç‰©æ“ä½œã€ç§»åŠ¨
+
             // Calculate velocity
             Velocity = (transform.position - _lastPosition) / Time.deltaTime;
             _lastPosition = transform.position;
 
-            GatherInput();
-           // Debug.Log(UnityEngine.Input.GetAxisRaw("Horizontal"));
+            if (!isTalking) GatherInput(); //å¯¹è¯æ—¶ç¦ç”¨ï¼šäººç‰©æ“ä½œ
+            // Debug.Log(UnityEngine.Input.GetAxisRaw("Horizontal"));
             RunCollisionChecks();
             CalulateDash();
 
@@ -107,8 +165,10 @@ namespace TarodevController {
 
         #region Gather Input
 
-        private void GatherInput() {
-            Input = new FrameInput {
+        private void GatherInput()
+        {
+            Input = new FrameInput
+            {
                 JumpDown = UnityEngine.Input.GetButtonDown("Jump"),
                 JumpUp = UnityEngine.Input.GetButtonUp("Jump"),
                 X = UnityEngine.Input.GetAxisRaw("Horizontal"),
@@ -116,16 +176,17 @@ namespace TarodevController {
                 Dash = UnityEngine.Input.GetButtonDown("Dash"),
                 Reverse = UnityEngine.Input.GetButtonDown("Reverse")
             };
-           if (Input.JumpDown) {
-               _lastJumpPressed = Time.time;
-           }
+            if (Input.JumpDown)
+            {
+                _lastJumpPressed = Time.time;
+            }
         }
 
         private Vector2Int GetHVinput()
         {
             int xInput = 0;
             int yInput = 0;
-            if (Mathf.Abs(UnityEngine.Input.GetAxisRaw("Horizontal")) >thresHold)
+            if (Mathf.Abs(UnityEngine.Input.GetAxisRaw("Horizontal")) > thresHold)
             {
                 xInput = UnityEngine.Input.GetAxisRaw("Horizontal") > 0 ? 1 : -1;
             }
@@ -149,25 +210,36 @@ namespace TarodevController {
 
 
         #region Collisions
+        public GameObject MovingGround;
+        private Transform Parent;
 
-        [Header("COLLISION")] [SerializeField] private Bounds _characterBounds;
+        [Header("COLLISION")][SerializeField] private Bounds _characterBounds;
         [SerializeField] private LayerMask _groundLayer;
-        //[SerializeField] private LayerMask _otherLayer;
+
+        //[SerializeField] private LayerMask _rebirthLayer;
         // [SerializeField] private LayerMask _enemyLayer;
         [SerializeField] private int _detectorCount = 3;
         [SerializeField] private float _detectionRayLength = 0.1f;
-        [SerializeField] [Range(0.1f, 0.3f)] private float _rayBuffer = 0.1f; // Prevents side detectors hitting the ground
+        [SerializeField][Range(0.1f, 0.3f)] private float _rayBuffer = 0.1f; // Prevents side detectors hitting the ground
 
         private RayRange _raysUp, _raysRight, _raysDown, _raysLeft;
-        [SerializeField]public bool _colUp, _colRight, _colDown, _colLeft;
+        [SerializeField] public bool _colUp, _colRight, _colDown, _colLeft;
         //[SerializeField] private bool _colUp_oneway, _colRight_oneway, _colDown_oneway, _colLeft_oneway;
+        [SerializeField] public bool _colUp_enemy, _colRight_enemy, _colDown_enemy, _colLeft_enemy;
+        [SerializeField] public bool _colUp_ReverseGround, _colDown_ReverseGround, _colLeft_ReverseGround, _colRight_ReverseGround;
+        //  [SerializeField] public bool _colUp_Rebirth,_colRight_Rebirth,_colDown_Rebirth,_colLeft_Rebirth;
+        [SerializeField] public bool _colUp_Moving, _colRight_Moving, _colDown_Moving, _colLeft_Moving;
+
+
 
         private float _timeLeftGrounded;
 
         // We use these raycast checks for pre-collision information
-        private void RunCollisionChecks() {
+        private void RunCollisionChecks()
+        {
             // Generate ray ranges. 
             CalculateRayRanged();
+            Calculate_In();
             // if(DamageDetection(_raysUp)|| DamageDetection(_raysDown)|| DamageDetection(_raysLeft)|| DamageDetection(_raysRight))
             //  {
             //      SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -206,50 +278,123 @@ namespace TarodevController {
                     FallThisFrame_Last = false;
                 }
             }
-            
+
 
             _colDown = groundedCheck;
             _colUp = groundedCheck_Re;
             // The rest
-           // _colUp = RunDetection(_raysUp);
+            // _colUp = RunDetection(_raysUp);
             _colLeft = RunDetection(_raysLeft);
             _colRight = RunDetection(_raysRight);
 
 
 
-    //  _colDown_oneway = RunDetection_other(_raysDown);
-    //  _colUp_oneway = RunDetection_other(_raysUp);
-    //  _colLeft_oneway = RunDetection_other(_raysLeft);  
-    //  _colRight_oneway = RunDetection_other(_raysRight);
-    //  
+            _colDown = groundedCheck;
+            _colUp = groundedCheck_Re;
+            // The rest
+            _colUp = RunDetection(_raysUp);
+            _colLeft = RunDetection(_raysLeft);
+            _colRight = RunDetection(_raysRight);
 
-         bool RunDetection(RayRange range) {
+
+
+            _colDown_enemy = RunDetection_enemy(_raysDown);
+            _colUp_enemy = RunDetection_enemy(_raysUp);
+            _colLeft_enemy = RunDetection_enemy(_raysLeft);
+            _colRight_enemy = RunDetection_enemy(_raysRight);
+
+
+            Caculate_enemy(_colUp_enemy, _colDown_enemy, _colLeft_enemy, _colRight_enemy);
+
+
+            _colDown_Moving = RunDetection_Moving(_raysDown);
+            _colLeft_Moving = RunDetection_Moving(_raysLeft);
+            _colRight_Moving = RunDetection_Moving(_raysRight);
+            _colUp_Moving = RunDetection_Moving(_raysUp);
+
+            Caculate_MovingGround(_colDown_Moving, _colUp_Moving, _colLeft_Moving, _colRight_Moving);
+
+
+            // _colUp_ReverseGround = RunDetection_ReverseGround(_raysUp);
+            // _colDown_ReverseGround = RunDetection_ReverseGround(_raysDown);
+            // _colLeft_ReverseGround = RunDetection_ReverseGround(_raysLeft);
+            // _colRight_ReverseGround = RunDetection_ReverseGround(_raysRight);
+            // Caculate_ReverseGround(_colUp_ReverseGround, _colDown_ReverseGround, _colLeft_ReverseGround, _colRight_ReverseGround);
+
+
+
+
+
+
+            // _colDown_Rebirth = RunDetection_Rebirth(_raysDown);
+            // _colLeft_Rebirth = RunDetection_Rebirth(_raysLeft);
+            // _colUp_Rebirth = RunDetection_Rebirth(_raysUp);
+            // _colRight_Rebirth = RunDetection_Rebirth(_raysRight);
+            //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //  _colDown_oneway = RunDetection_other(_raysDown);
+            //  _colUp_oneway = RunDetection_other(_raysUp);
+            //  _colLeft_oneway = RunDetection_other(_raysLeft);  
+            //  _colRight_oneway = RunDetection_other(_raysRight);
+            //  
+
+            bool RunDetection(RayRange range)
+            {
                 return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer));
             }
-       // bool RunDetection_other(RayRange range)
-       // {
-       //     return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength,_otherLayer));
-       // }
-            //  bool RunDetection_oneway(RayRange range)
-            //  {
-            //
-            //        return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _ground_onewayLayer) ? Physics2D.Raycast(point, range.Dir, _detectionRayLength, _ground_onewayLayer).collider.gameObject.CompareTag("oneway"):false);
-            //
-            //
-            //
-            //
-            //
-            //    }
-            //
-            //  bool DamageDetection(RayRange range)
-            //  {
-            //      return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _enemyLayer));
-            //  }
+            bool RunDetection_enemy(RayRange range)
+            {
+                return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer) ? Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer).collider.gameObject.CompareTag("enemy") : false);
+            }
+
+
+
+
+            bool RunDetection_Moving(RayRange range)
+            {
+                return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer) ? Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer).collider.gameObject.CompareTag("MovingGround") && (MovingGround = Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer).collider.gameObject) : false);
+            }
+
+            //bool RunDetection_ReverseGround(RayRange range)
+            //{
+            //    return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer) ? Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer).collider.gameObject.CompareTag("ReverseGround") : false);
+            //}
+
+            //   bool RunDetection_Rebirth(RayRange range)
+            //   {
+            //       return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _rebirthLayer));
+            //   }
+
+
+
+
+
+
+
+
+
 
 
         }
 
-        private void CalculateRayRanged() {
+        private void CalculateRayRanged()
+        {
             // This is crying out for some kind of refactor. 
             var b = new Bounds(transform.position, _characterBounds.size);
 
@@ -260,24 +405,44 @@ namespace TarodevController {
         }
 
 
-        private IEnumerable<Vector2> EvaluateRayPositions(RayRange range) {
-            for (var i = 0; i < _detectorCount; i++) {
+        private void Calculate_In()
+        {
+            var c = new Bounds(transform.position, _characterBounds.size);
+            LeftUp = new Vector3(c.min.x, c.max.y, 0);
+            LeftDown = new Vector3(c.min.x, c.min.y, 0);
+            RightUp = new Vector3(c.max.x, c.max.y, 0);
+            RightDown = new Vector3(c.max.x, c.min.y, 0);
+
+        }
+
+
+
+
+
+        private IEnumerable<Vector2> EvaluateRayPositions(RayRange range)
+        {
+            for (var i = 0; i < _detectorCount; i++)
+            {
                 var t = (float)i / (_detectorCount - 1);
                 yield return Vector2.Lerp(range.Start, range.End, t);
             }
         }
 
-        private void OnDrawGizmos() {
+        private void OnDrawGizmos()
+        {
             // Bounds
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(transform.position + _characterBounds.center, _characterBounds.size);
 
             // Rays
-            if (!Application.isPlaying) {
+            if (!Application.isPlaying)
+            {
                 CalculateRayRanged();
                 Gizmos.color = Color.blue;
-                foreach (var range in new List<RayRange> { _raysUp, _raysRight, _raysDown, _raysLeft }) {
-                    foreach (var point in EvaluateRayPositions(range)) {
+                foreach (var range in new List<RayRange> { _raysUp, _raysRight, _raysDown, _raysLeft })
+                {
+                    foreach (var point in EvaluateRayPositions(range))
+                    {
                         Gizmos.DrawRay(point, range.Dir * _detectionRayLength);
                     }
                 }
@@ -294,54 +459,59 @@ namespace TarodevController {
 
 
         #region dash
-        [Header("DASH")][SerializeField] private float dashSpeed = 40f;//³å´ÌËÙÂÊ
-        
-        //[SerializeField]public float duration = 0.2f; // ³å´Ì³ÖĞøÊ±¼ä
-        [SerializeField] public float duration_1 = 0.2f; // ³å´ÌÒ»¶Î³ÖĞøÊ±¼ä
-        [SerializeField] public float duration_2 = 0.05f; // ³å´Ì¶ş¶Î³ÖĞøÊ±¼ä
+        [Header("DASH")][SerializeField] private float dashSpeed = 40f;//å†²åˆºé€Ÿç‡
 
-        [SerializeField] private float dashCount = 1; // µ±Ç°³å´Ì´ÎÊı
+        //[SerializeField]public float duration = 0.2f; // å†²åˆºæŒç»­æ—¶é—´
+        [SerializeField] public float duration_1 = 0.2f; // å†²åˆºä¸€æ®µæŒç»­æ—¶é—´
+        [SerializeField] public float duration_2 = 0.05f; // å†²åˆºäºŒæ®µæŒç»­æ—¶é—´
+
+        [SerializeField] private float dashCount = 1; // å½“å‰å†²åˆºæ¬¡æ•°
         [SerializeField] private float dashMaxCount = 1;
-        private float currDirection_X =0;
-        private float currDirection_Y =0;
+        private float currDirection_X = 0;
+        private float currDirection_Y = 0;
         private float currDashSpeed = 0;
         private float _currentHorizontalSpeed_Dash = 0;
         private float _currentVerticalSpeed_Dash = 0;
+        public float Dashdir;
         private void CalulateDash()
         {
             if (isDashing)
             {
                 endTimer += Time.deltaTime;
+                LandingThisFrame = true;
                 //currDashSpeed *= Mathf.Lerp(1, 0, endTimer_2 / duration_2);
                 ////currDashSpeed = 0;
                 //_currentHorizontalSpeed = currDashSpeed * currDirection_X;
                 //_currentVerticalSpeed = currDashSpeed * currDirection_Y;
 
             }
-            if (endTimer > (duration_1 - duration_2)) {
+            if (endTimer > (duration_1 - duration_2))
+            {
                 endTimer_2 += Time.deltaTime;
                 isDashing_Over = true;
                 // _currentHorizontalSpeed = Mathf.MoveTowards(_currentHorizontalSpeed, 0, _deAcceleration * Time.deltaTime);
-                _currentHorizontalSpeed -= currDashSpeed * currDirection_X * Time.deltaTime ;
+                _currentHorizontalSpeed -= currDashSpeed * currDirection_X * Time.deltaTime;
                 //_currentVerticalSpeed += (currDashSpeed * currDirection_Y * -1 * Mathf.Lerp(1, 0, endTimer_2 / duration_2));
                 _currentVerticalSpeed -= currDashSpeed * currDirection_Y * Time.deltaTime;
             }
-                
-            if ((endTimer >= duration_1 && isDashing)) { 
+
+            if ((endTimer >= duration_1 && isDashing))
+            {
                 isAdvancedEnd = false;
                 _currentHorizontalSpeed = 0;
                 _currentVerticalSpeed = 0;
                 isDashing = false;
                 Dashed = false;
-                endTimer = 0;   
+                FallThisFrame_Last = false;
+                endTimer = 0;
             }
             // Debug.Log(currDashSpeed);
-            if (!Input.Dash||dashCount<=0||isDashing)
+            if (!Input.Dash || dashCount <= 0 || isDashing)
             {
                 dashWave.DashUpdate(false);
                 return;
             }
-
+            // DashThisFrame = true;
             Dashed = true;
             isDashing = true;
             isDashing_Over = false;
@@ -362,19 +532,60 @@ namespace TarodevController {
             // dashSpeed -= dashSpeed * 1;
             currDirection_X = direction.x;
             currDirection_Y = direction.y;
+
+            switch (currDirection_X, currDirection_Y)
+            {
+                case (0, 1):
+                    Dashdir = 0;
+                    break;
+                case (1, 1):
+                    Dashdir = 0.25f;
+                    break;
+                case (1, 0):
+                    Dashdir = 0.5f;
+                    break;
+                case (1, -1):
+                    Dashdir = 0.75f;
+                    break;
+                case (0, -1):
+                    Dashdir = 1f;
+                    break;
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             _currentHorizontalSpeed = currDashSpeed * direction.x;
             _currentVerticalSpeed = currDashSpeed * direction.y;
 
-            //Ïà»ú¶¶¶¯
-            //[DOTween]Ê¹ÓÃcinemachineÏà»úÏÂ£¬ÆäTransform×é¼ş²»¿É±»´úÂëĞŞ¸Ä
+            //ç›¸æœºæŠ–åŠ¨
+            //[DOTween]ä½¿ç”¨cinemachineç›¸æœºä¸‹ï¼Œå…¶Transformç»„ä»¶ä¸å¯è¢«ä»£ç ä¿®æ”¹
             //Camera.main.transform.DOComplete();
             //var tmp = Camera.main.transform.DOShakePosition(.2f, .5f, 14, 90, false, true);
-            //tmp.onComplete += () => { print("Ïà»ú¶¶¶¯Íê³É"); };
+            //tmp.onComplete += () => { print("ç›¸æœºæŠ–åŠ¨å®Œæˆ"); };
             //[Cinemachine]
             impulseSource.GenerateImpulse();
             //impulseSource.GenerateImpulse(Camera.main.transform.forward);
 
-            //²¥·Å³å´ÌÆÁÄ»²¨ÎÆÌØĞ§
+            //æ’­æ”¾å†²åˆºå±å¹•æ³¢çº¹ç‰¹æ•ˆ
             //FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
             dashWave.DashUpdate(true);
         }
@@ -383,35 +594,39 @@ namespace TarodevController {
 
         #region Walk
 
-        [Header("WALKING")] [SerializeField] private float _acceleration = 90;
+        [Header("WALKING")][SerializeField] private float _acceleration = 90;
         [SerializeField] private float _moveClamp = 13;
         [SerializeField] private float _deAcceleration = 60f;
         [SerializeField] private float _apexBonus = 2;
 
-        private void CalculateWalk() {
-            if (Input.X != 0) {
+        private void CalculateWalk()
+        {
+            if (Input.X != 0)
+            {
                 // Set horizontal move speed
                 if (isDashing_Over)
                 {
-                    _currentHorizontalSpeed += Input.X * _acceleration * Time.deltaTime  ;
+                    _currentHorizontalSpeed += Input.X * _acceleration * Time.deltaTime;
 
                     // clamped by max frame movement
 
-                    _currentHorizontalSpeed = Mathf.Clamp(_currentHorizontalSpeed, -_moveClamp *Curr_Re_HoSpeed, _moveClamp * Curr_Re_HoSpeed);
+                    _currentHorizontalSpeed = Mathf.Clamp(_currentHorizontalSpeed, -_moveClamp * Curr_Re_HoSpeed, _moveClamp * Curr_Re_HoSpeed);
                 }
-                  
+
 
                 // Apply bonus at the apex of a jump
-               // var apexBonus = Mathf.Sign(Input.X) * _apexBonus * _apexPoint;
-              //  _currentHorizontalSpeed += apexBonus * Time.deltaTime;
+                // var apexBonus = Mathf.Sign(Input.X) * _apexBonus * _apexPoint;
+                //  _currentHorizontalSpeed += apexBonus * Time.deltaTime;
             }
-            else {
+            else
+            {
                 // No input. Let's slow the character down
-                if(!isDashing)
-                _currentHorizontalSpeed = Mathf.MoveTowards(_currentHorizontalSpeed, 0, _deAcceleration * Time.deltaTime) ;
+                if (!isDashing)
+                    _currentHorizontalSpeed = Mathf.MoveTowards(_currentHorizontalSpeed, 0, _deAcceleration * Time.deltaTime);
             }
 
-            if (_currentHorizontalSpeed > 0 && _colRight || _currentHorizontalSpeed < 0 && _colLeft) {
+            if (_currentHorizontalSpeed > 0 && _colRight || _currentHorizontalSpeed < 0 && _colLeft)
+            {
                 // Don't walk through walls
                 _currentHorizontalSpeed = 0;
             }
@@ -421,47 +636,48 @@ namespace TarodevController {
 
         #region Gravity
 
-        [Header("GRAVITY")] [SerializeField] private float _fallClamp = -40f;
+        [Header("GRAVITY")][SerializeField] private float _fallClamp = -40f;
         [SerializeField] private float _fallClampReverse = 40f;
-       // [SerializeField] private float _minReverseSpeed = 80f;
+        // [SerializeField] private float _minReverseSpeed = 80f;
         //[SerializeField] private float _maxReverseSpeed = 120f;
         [SerializeField] private float _minFallSpeed = 80f;
         [SerializeField] private float _maxFallSpeed = 120f;
         private float _fallSpeed;
 
-        private void CalculateGravity() {
+        private void CalculateGravity()
+        {
             if (!GameManager.Instance.isReverse)
             {
                 if (_colDown)
                 {
-                   
-                   if (_currentVerticalSpeed < 0) _currentVerticalSpeed = 0;
+
+                    if (_currentVerticalSpeed < 0) _currentVerticalSpeed = 0;
 
                 }
                 else
                 {
                     // Add downward force while ascending if we ended the jump early
-                  
+
                     if (isDashing) _fallSpeed = 0f;
                     else
                     {
-                        
-                         var fallSpeed = _endedJumpEarly && _currentVerticalSpeed > 0 ? _fallSpeed * _jumpEndEarlyGravityModifier : _fallSpeed;
-                    
+
+                        var fallSpeed = _endedJumpEarly && _currentVerticalSpeed > 0 ? _fallSpeed * _jumpEndEarlyGravityModifier : _fallSpeed;
+
                         _currentVerticalSpeed -= fallSpeed * Time.deltaTime;
-                       // Debug.Log(_currentVerticalSpeed * _currentVerticalSpeed_Fall);
-                        if (_currentVerticalSpeed  <0&&!FallThisFrame_Last)
+                        // Debug.Log(_currentVerticalSpeed * _currentVerticalSpeed_Fall);
+                        if (_currentVerticalSpeed < 0 && !FallThisFrame_Last)
                         {
                             //Debug.Log("thisFrame");
                             FallThisFrame = true;
                             FallThisFrame_Last = true;
-                            
+
                         }
                         //_currentVerticalSpeed_Fall = _currentVerticalSpeed;
                     }
 
                     // Fall
-                   
+
                     // Debug.Log(_currentVerticalSpeed);
 
                     // Clamp
@@ -483,21 +699,31 @@ namespace TarodevController {
                     if (isDashing)
                     {
                         //_fallSpeed = 0f;
-                      
-                    } 
+
+                    }
                     else
                     {
                         // var fallSpeed = _endedJumpEarly && _currentVerticalSpeed < 0 ? _fallSpeed * _jumpEndEarlyGravityModifier : _fallSpeed;
                         // var test_sp = 30f;
                         // _currentVerticalSpeed += test_sp * Time.deltaTime;
                         var fallSpeed = _endedJumpEarly && _currentVerticalSpeed < 0 ? _fallSpeed * _jumpEndEarlyGravityModifier : _fallSpeed;
-                       // Debug.Log(_fallSpeed);
+                        // Debug.Log(_fallSpeed);
                         _currentVerticalSpeed += fallSpeed * Time.deltaTime;
+
+
+
+                        if (_currentVerticalSpeed > 0 && !FallThisFrame_Last && !isDashing)
+                        {
+                            Debug.Log("thisFrame_21");
+                            FallThisFrame = true;
+                            FallThisFrame_Last = true;
+
+                        }
 
                     }
 
                     // Fall
-                 
+
                     // Debug.Log(_currentVerticalSpeed);
 
                     // Clamp
@@ -509,8 +735,8 @@ namespace TarodevController {
 
 
         #region Jump
-        
-        [Header("JUMPING")] [SerializeField] private float _jumpHeight = 10;
+
+        [Header("JUMPING")][SerializeField] private float _jumpHeight = 10;
         [SerializeField] private float _jumpApexThreshold = 10f;
         [SerializeField] private float _coyoteTimeThreshold = 0.1f;
         [SerializeField] private float _jumpBuffer = 0.1f;
@@ -523,82 +749,105 @@ namespace TarodevController {
         private bool CanUseCoyote => _coyoteUsable && !_colDown && _timeLeftGrounded + _coyoteTimeThreshold > Time.time;
         private bool CanUseCoyte_Re => _coyoteUsable && !_colUp && _timeLeftGrounded + _coyoteTimeThreshold > Time.time;
         private bool HasBufferedJump => _colDown && _lastJumpPressed + _jumpBuffer > Time.time;
-        
+
         private bool HaBufferedJump_Re => _colUp && _lastJumpPressed + _jumpBuffer > Time.time;
 
 
-        private void CalculateJumpApex() {
-            if (!_colDown) {
-                // Gets stronger the closer to the top of the jump
-                _apexPoint = Mathf.InverseLerp(_jumpApexThreshold, 0, Mathf.Abs(Velocity.y));
-                _fallSpeed = Mathf.Lerp(_minFallSpeed, _maxFallSpeed, _apexPoint);
-            }
-            else {
-                _apexPoint = 0;
-            }
-        }
-        
-        private void CalculateJump() {
-
-        // Jump if: grounded or within coyote threshold || sufficient jump buffer
-        if (!GameManager.Instance.isReverse)
+        private void CalculateJumpApex()
         {
-               
-            if (Input.JumpDown && CanUseCoyote || HasBufferedJump)
+
+            if (!GameManager.Instance.isReverse)
             {
-                _currentVerticalSpeed = _jumpHeight;
-                _endedJumpEarly = false;
-                _coyoteUsable = false;
-                _timeLeftGrounded = float.MinValue;
-                JumpingThisFrame = true;
+                if (!_colDown)
+                {
+                    // Gets stronger the closer to the top of the jump
+                    _apexPoint = Mathf.InverseLerp(_jumpApexThreshold, 0, Mathf.Abs(Velocity.y));
+                    _fallSpeed = Mathf.Lerp(_minFallSpeed, _maxFallSpeed, _apexPoint);
+                }
+                else
+                {
+                    _apexPoint = 0;
+                }
             }
             else
             {
-                JumpingThisFrame = false;
+                if (!_colUp)
+                {
+                    // Gets stronger the closer to the top of the jump
+                    _apexPoint = Mathf.InverseLerp(_jumpApexThreshold, 0, Mathf.Abs(Velocity.y));
+                    _fallSpeed = Mathf.Lerp(_minFallSpeed, _maxFallSpeed, _apexPoint);
+                }
+                else
+                {
+                    _apexPoint = 0;
+                }
             }
 
-            // End the jump early if button released
-            if (!_colDown && Input.JumpUp && !_endedJumpEarly && Velocity.y > 0)
-            {
-                // _currentVerticalSpeed = 0;
-                _endedJumpEarly = true;
-            }
 
-            if (_colUp)
-            {
-                if (_currentVerticalSpeed > 0) _currentVerticalSpeed = 0;
-            }
         }
-        else
+
+        private void CalculateJump()
         {
-            
-            if (Input.JumpDown && CanUseCoyte_Re || HaBufferedJump_Re)
+
+            // Jump if: grounded or within coyote threshold || sufficient jump buffer
+            if (!GameManager.Instance.isReverse)
             {
-                // Debug.Log(9);
-                _currentVerticalSpeed = _jumpHeight*-1;
-                _endedJumpEarly = false;
-                _coyoteUsable = false;
-                _timeLeftGrounded = float.MinValue;
-                // JumpingThisFrame = true;
+
+                if (Input.JumpDown && CanUseCoyote || HasBufferedJump)
+                {
+                    _currentVerticalSpeed = _jumpHeight;
+                    _endedJumpEarly = false;
+                    _coyoteUsable = false;
+                    _timeLeftGrounded = float.MinValue;
+                    JumpingThisFrame = true;
+                }
+                else
+                {
+                    JumpingThisFrame = false;
+                }
+
+                // End the jump early if button released
+                if (!_colDown && Input.JumpUp && !_endedJumpEarly && Velocity.y > 0)
+                {
+                    // _currentVerticalSpeed = 0;
+                    _endedJumpEarly = true;
+                }
+
+                if (_colUp)
+                {
+                    if (_currentVerticalSpeed > 0) _currentVerticalSpeed = 0;
+                }
             }
             else
             {
-                // JumpingThisFrame = false;
+
+                if (Input.JumpDown && CanUseCoyte_Re || HaBufferedJump_Re)
+                {
+                    // Debug.Log(9);
+                    _currentVerticalSpeed = _jumpHeight * -1;
+                    _endedJumpEarly = false;
+                    _coyoteUsable = false;
+                    _timeLeftGrounded = float.MinValue;
+                    JumpingThisFrame = true;
+                }
+                else
+                {
+                    JumpingThisFrame = false;
+                }
+
+                // End the jump early if button released
+                if (!_colUp && Input.JumpUp && !_endedJumpEarly && Velocity.y < 0)
+                {
+                    // _currentVerticalSpeed = 0;
+                    _endedJumpEarly = true;
+                }
+
+                if (_colDown)
+                {
+                    if (_currentVerticalSpeed < 0) _currentVerticalSpeed = 0;
+                }
             }
 
-            // End the jump early if button released
-            if (!_colUp && Input.JumpUp && !_endedJumpEarly && Velocity.y < 0)
-            {
-                // _currentVerticalSpeed = 0;
-                _endedJumpEarly = true;
-            }
-              
-            if (_colDown)
-            {
-                if (_currentVerticalSpeed < 0) _currentVerticalSpeed = 0;
-            }
-        }
-           
         }
         #endregion
 
@@ -636,27 +885,33 @@ namespace TarodevController {
 
         [Header("REVERSE")]
         [SerializeField] private float Re_HoSpeed = 1;
-         private float Curr_Re_HoSpeed = 1f;
+        private float Curr_Re_HoSpeed = 1f;
 
         private void CaculateReverse()
         {
-             //Jump if: grounded or within coyote threshold || sufficient jump buffer
-            if (Input.Reverse&&CanReverse&&!isDashing) {
+            //Jump if: grounded or within coyote threshold || sufficient jump buffer
+            if (Input.Reverse && CanReverse && !isDashing)
+            {
+                if (FallThisFrame_Last)
+                {
+                    FallThisFrame_Last = false;
+                }
                 //_currentHorizontalSpeed = 0;
                 Curr_Re_HoSpeed = Re_HoSpeed;
                 //_currentVerticalSpeed = _jumpHeight;
-                GameManager.Instance.isReverse = GameManager.Instance.isReverse?false:true;
+                GameManager.Instance.isReverse = GameManager.Instance.isReverse ? false : true;
                 //_endedJumpEarly = false;
                 // _timeLeftGrounded = float.MinValue;
                 // _coyoteUsable = false;
                 CanReverse = false;
                 ReverseThisFrame = true;
                 //JumpingThisFrame = true;
-            }                  
-            else {
+            }
+            else
+            {
                 ReverseThisFrame = false;
             }
-            
+
             // End the jump early if button released
             //  if (!_colDown && Input.JumpUp && !_endedJumpEarly && Velocity.y > 0) {
             //      // _currentVerticalSpeed = 0;
@@ -672,86 +927,164 @@ namespace TarodevController {
 
         #region Move
 
-        [Header("MOVE")] [SerializeField, Tooltip("Raising this value increases collision accuracy at the cost of performance.")]
+        [Header("MOVE")]
+        [SerializeField, Tooltip("Raising this value increases collision accuracy at the cost of performance.")]
         private int _freeColliderIterations = 10;
 
         // We cast our bounds before moving to avoid future collisions
-        private void MoveCharacter() {
+        private void MoveCharacter()
+        {
             var pos = transform.position;
             RawMovement = new Vector3(_currentHorizontalSpeed, _currentVerticalSpeed); // Used externally
             //RawMovement_Dash = new Vector3(_currentHorizontalSpeed_Dash, _currentVerticalSpeed_Dash);
             var move = RawMovement * Time.deltaTime;
-            var furthestPoint = pos + move;
+            var furthestPoint = pos + move + move;
 
             // check furthest movement. If nothing hit, move and don't do extra checks
             var hit = Physics2D.OverlapBox(furthestPoint, _characterBounds.size, 0, _groundLayer);
-            if (!hit) {
+            if (!hit)
+            {
                 transform.position += move;
                 return;
             }
 
             //otherwise increment away from current pos; see what closest position we can move to
-         
-      var positionToMoveTo = transform.position;
-      for (int i = 1; i < _freeColliderIterations; i++) {
-          // increment to check all but furthestPoint - we did that already
-          var t = (float)i / _freeColliderIterations;
-          var posToTry = Vector2.Lerp(pos, furthestPoint, t);
-     
-          if (Physics2D.OverlapBox(posToTry, _characterBounds.size, 0, _groundLayer)) {
-              transform.position = positionToMoveTo;
-     
-              // We've landed on a corner or hit our head on a ledge. Nudge the player gently
-              if (i == 1) {
-                 if (_currentVerticalSpeed < 0&&!_colUp) _currentVerticalSpeed = 0;
-                  var dir = transform.position - hit.transform.position;
-                  transform.position += dir.normalized * move.magnitude;
-              }
-     
-              return;
-          }
-     
-          positionToMoveTo = posToTry;
-      }
+
+            var positionToMoveTo = transform.position;
+            for (int i = 1; i < _freeColliderIterations; i++)
+            {
+                // increment to check all but furthestPoint - we did that already
+                var t = (float)i / _freeColliderIterations;
+                var posToTry = Vector2.Lerp(pos, furthestPoint, t);
+
+                if (Physics2D.OverlapBox(posToTry, _characterBounds.size, 0, _groundLayer))
+                {
+                    transform.position = positionToMoveTo;
+
+                    // We've landed on a corner or hit our head on a ledge. Nudge the player gently
+                    if (i == 1)
+                    {
+                        if (_currentVerticalSpeed < 0 && !_colUp) _currentVerticalSpeed = 0;
+                        var dir = transform.position - hit.transform.position;
+                        if (_playerAnimator.transform.localScale.x == 1)
+                        {
+                            transform.position += dir.normalized * move.magnitude;
+                        }
+                        else
+                        {
+                            transform.position -= dir.normalized * move.magnitude;
+                        }
+
+                    }
+
+                    return;
+                }
+
+                positionToMoveTo = posToTry;
+            }
         }
 
         #endregion
 
 
+        #region CalculateEnv
+
+        private void Caculate_enemy(bool up, bool down, bool left, bool right)
+        {
+            if (up || down || left || right)
+            {
+                Die();
+            }
+            //  SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+
+        private void Caculate_ReverseGround(bool up, bool down, bool left, bool right)
+        {
+            if ((up && _colDown) || (down && _colUp))
+            {
+                Die();
+            }
+            //  SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        #endregion
+
+        private void Caculate_MovingGround(bool up, bool down, bool left, bool right)
+        {
+            if (up || down || left || right)
+            {
+                transform.parent = MovingGround.transform;
+            }
+            else
+            {
+                transform.parent = Parent;
+            }
+        }
+
+
+
+
+
         #region Die
 
         [Header("Death")]
-        // ÊÇ·ñ´¦ÓÚËÀÍö×´Ì¬
+        // æ˜¯å¦å¤„äºæ­»äº¡çŠ¶æ€
         public bool isDead;
-        // ËÀÍö¶¯»­ÊÇ·ñÍê³É
+        // æ­»äº¡åŠ¨ç”»æ˜¯å¦å®Œæˆ
         public bool isDeathAnimFinish;
+
+        public Transform rebirth;
+
+        private float Reverse_color;
 
         public void Die()
         {
             if (isDead) return;
-            Debug.Log("Die");
-            //TODO ËÀÍöÎŞ·¨ÒÆ¶¯
+            //æ­»äº¡æ—¶ç¦ç”¨Updateï¼šæ“ä½œã€ç§»åŠ¨
             isDead = true;
-
-            // Òş²ØPlayer(Sprite)
+            // éšè—Player(Sprite)
             Hide();
 
-            // ²úÉúDeath¶¯»­Ô¤ÖÆÌå£¨²¥·ÅÍêºó×Ô¶¯Ïú»Ù£©
-            //var dust = S_Dust_Factory.Instance.CreateDust(transform.position);
-            //dust.AddObserver(this);
-
-            //TODO ÍêÉÆËÀÍöĞ§¹û
-            temp_DeathAndRebirth();
-
-            // Ïà»ú¶¶¶¯
-            //S_MainCamera.Instance.Shake(C_CameraShake.ShakeType.Die);
-
-            //TODO ËÀÍöºóÖØÔØ³¡¾° or ...
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
-            //»Ö¸´Õı³£ÖØÁ¦
-            GameManager.Instance.isReverse = false;
+            StartCoroutine(Co_Die());
         }
+        
+        public IEnumerator Co_Die()
+        {
+            //TODO æ’­æ”¾æ­»äº¡åŠ¨ç”»å’Œç‰¹æ•ˆ ï¼ˆå‡è£…è¦èŠ±0.5ç§’ï¼‰
+            yield return new WaitForSeconds(0.5f);
+
+            //å…³é—­æ‹–å°¾æ¸²æŸ“å™¨
+            trailRenderer.enabled = false;
+
+            //ä»å¤–å‘å†…æ’­æ”¾åœ†åœˆ
+            yield return deathCircle.PlayCircleOutToIn();
+
+            //TODO
+            //åšæ³•1.æ­»äº¡åé‡è½½åœºæ™¯
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            ////åšæ³•2.é‡æ–°è®¾ç½®Playerçš„ä½ç½®
+            //OnDeathAnimFinish();
+            ////ï¼ˆå‡è£…è¦èŠ±0.1ç§’ï¼‰
+            //yield return new WaitForSeconds(0.1f);
+
+            //// æ˜¾ç¤ºPlayer é‡è®¾æ­»äº¡çŠ¶æ€
+            //OnRebirthAnimFinish();
+
+            ////TODO [å¯é€‰]æ’­æ”¾é‡ç”ŸåŠ¨ç”»å’Œç‰¹æ•ˆ
+
+            ////æ¢å¤æ­£å¸¸é‡åŠ›
+            //GameManager.Instance.isReverse = Rebirth_Reverse;
+            //Reverse_color = Rebirth_Reverse ? 1f : 0f;
+            //anim.SetLayerWeight(1, Reverse_color);
+
+            ////ä»å†…å‘å¤–æ’­æ”¾åœ†åœˆ
+            //yield return deathCircle.PlayCircleInToOut();
+
+            ////å¼€å¯æ‹–å°¾æ¸²æŸ“å™¨
+            //trailRenderer.enabled = true;
+        }
+
         public void temp_DeathAndRebirth()
         {
             OnDeathAnimFinish();
@@ -773,22 +1106,16 @@ namespace TarodevController {
 
         public void OnDeathAnimFinish()
         {
-            Debug.Log("OnDeathAnimFinish");
-            // ÖØĞÂÉèÖÃPlayerµÄÎ»ÖÃ
-            transform.position = GameManager.Instance.playerRebirthPlace.position;
-            //m_Rigidbody2DWrapper.Resume();
-            // ²úÉúRebirth¶¯»­Ô¤ÖÆÌå£¨²¥·ÅÍê³Éºó×Ô¶¯Ïú»Ù£©
-            //var dust = S_Dust_Factory.Instance.CreateDust(transform.position);
-            //dust.AddObserver(this);
+            transform.position = rebirth.position;
+            // äº§ç”ŸRebirthåŠ¨ç”»é¢„åˆ¶ä½“ï¼ˆæ’­æ”¾å®Œæˆåè‡ªåŠ¨é”€æ¯ï¼‰
             isDeathAnimFinish = true;
         }
 
         public void OnRebirthAnimFinish()
         {
-            Debug.Log("OnRebirthAnimFinish");
-            // ÏÔÊ¾Player
+            // æ˜¾ç¤ºPlayer
             Show();
-            // ÖØÉèËÀÍö×´Ì¬
+            // é‡è®¾æ­»äº¡çŠ¶æ€
             isDead = false;
             isDeathAnimFinish = false;
         }
@@ -798,14 +1125,14 @@ namespace TarodevController {
         #region Show and Hide player sprite
 
         [Header("Show and Hide sprite")]
-        // Íæ¼ÒÊÇ·ñÔİÍ£
+        // ç©å®¶æ˜¯å¦æš‚åœ
         public bool isPaused;
 
-        // Íæ¼ÒÊÇ·ñÔÚÔİÍ£µÄ»ù´¡ÉÏ½øĞĞÁËÒş²Ø
-        // Èç¹ûÍæ¼ÒÊÇÒş²ØµÄ£¬ÄÇÃ´±ØÈ»Ò²ÊÇÔİÍ£µÄ
+        // ç©å®¶æ˜¯å¦åœ¨æš‚åœçš„åŸºç¡€ä¸Šè¿›è¡Œäº†éšè—
+        // å¦‚æœç©å®¶æ˜¯éšè—çš„ï¼Œé‚£ä¹ˆå¿…ç„¶ä¹Ÿæ˜¯æš‚åœçš„
         public bool isHidden { get; private set; }
 
-        // Òş²ØPlayer(Sprite)
+        // éšè—Player(Sprite)
         public void Hide()
         {
             if (isHidden) return;
@@ -819,7 +1146,7 @@ namespace TarodevController {
             isHidden = true;
         }
 
-        // ÏÔÊ¾Player(Sprite)
+        // æ˜¾ç¤ºPlayer(Sprite)
         public void Show()
         {
             if (!isHidden) return;

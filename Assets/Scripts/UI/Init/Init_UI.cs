@@ -20,7 +20,7 @@ public class Init_UI : PanelsGroup
     }
     public static void HidePanelsAfterLogin()
     {
-        UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").HideMe();
+        //UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").HideMe();
         UIManager.GetInstance().GetPanel<Init_LoginPanel>("Init_LoginPanel").HideMe();
         UIManager.GetInstance().GetPanel<Init_RegisterPanel>("Init_RegisterPanel").HideMe();
     }

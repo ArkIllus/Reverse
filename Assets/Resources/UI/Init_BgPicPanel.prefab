@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: eead664a45965ca418d0272c81d38935, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d9f9255d136d3984ea14e81c2d3eeff0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e9cb79755c45584478e01701cd4660f7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7dc5299093c1e9646a511bb81ef97bb3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageGameTitle: {fileID: 8884101837809492691}
   imageBackground: {fileID: 8836906210228049549}
+  imageBackground2: {fileID: 397063446794431720}
   normalMat: {fileID: 0}
   effectMat: {fileID: 2100000, guid: 2fbce786af5b0e64fb71c6d3b47a37f4, type: 2}
-  imageBackground2: {fileID: 397063446794431720}
   fadeTime: 0.8

@@ -39,6 +39,7 @@ namespace TarodevController {
             if (_player.Dashed)
             {
                 _anim.SetBool(DashKey,true);
+                _anim.SetFloat(DasDirhKey, _player.Dashdir);
                 return;
             }
             else
@@ -125,7 +126,7 @@ namespace TarodevController {
         private static readonly int ReverseKey = Animator.StringToHash("Reverse");
         private static readonly int DashKey = Animator.StringToHash("Dash");
         private static readonly int FallKey = Animator.StringToHash("Fall");
-
+        private static readonly int DasDirhKey = Animator.StringToHash("DashDir");
         #endregion
     }
 }

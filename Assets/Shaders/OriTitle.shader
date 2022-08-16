@@ -89,13 +89,12 @@ Shader "Learn/OriTitle"
             }
 
             //[注] HLSL 中 scalar 标量类型是没有 fixed
-            //fixed4 frag(v2f i) : SV_Target
             half4 frag(v2f i) : SV_Target
-            //half4 frag(v2f i) : COLOR
             {
-                //fixed4 mask = tex2D(_MaskTex, i.uv);
-                half4 mask = tex2D(_MaskTex, i.uv);
-                //fixed4 mask = TEXTURE2D(_MaskTex, i.uv);
+                //[注] 应用_MaskTex的offset
+                float2 uvNew = TRANSFORM_TEX(i.uv, _MaskTex);
+                half4 mask = tex2D(_MaskTex, uvNew);
+                //half4 mask = tex2D(_MaskTex, i.uv);
 
                 float R = Remap(0.3 , 0.9, 0, 1, mask.r);
                 float centerX = (1 - R) * i.uv.x + R;

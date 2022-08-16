@@ -1315,10 +1315,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1288142012}
     m_Modifications:
-    - target: {fileID: 397063446794431720, guid: 6741e48f16fc46544b1dfed0d1f20298, type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8836906210228049539, guid: 6741e48f16fc46544b1dfed0d1f20298, type: 3}
       propertyPath: m_Name
       value: Init_BgPicPanel
@@ -1535,7 +1531,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1774,11 +1770,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6145171252387122805, guid: 795b026658248ca4aba0b5f5db2b90ff, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1812
+      value: 1812.0001
       objectReference: {fileID: 0}
     - target: {fileID: 6145171252387122805, guid: 795b026658248ca4aba0b5f5db2b90ff, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -870
+      value: -790
       objectReference: {fileID: 0}
     - target: {fileID: 6145171252426341600, guid: 795b026658248ca4aba0b5f5db2b90ff, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1822,11 +1818,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6145171253035955295, guid: 795b026658248ca4aba0b5f5db2b90ff, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1812
+      value: 1812.0001
       objectReference: {fileID: 0}
     - target: {fileID: 6145171253035955295, guid: 795b026658248ca4aba0b5f5db2b90ff, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -790
+      value: -710
       objectReference: {fileID: 0}
     - target: {fileID: 6145171253251286230, guid: 795b026658248ca4aba0b5f5db2b90ff, type: 3}
       propertyPath: m_Pivot.x
@@ -1942,11 +1938,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6961355662211982591, guid: 795b026658248ca4aba0b5f5db2b90ff, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1812
+      value: 1812.0001
       objectReference: {fileID: 0}
     - target: {fileID: 6961355662211982591, guid: 795b026658248ca4aba0b5f5db2b90ff, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -950
+      value: -870
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 795b026658248ca4aba0b5f5db2b90ff, type: 3}

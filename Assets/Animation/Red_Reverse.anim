@@ -22,7 +22,7 @@ AnimationClip:
     - time: 0
       value: {fileID: 21300000, guid: 0b338d73cd7203444ac3f096a67025f0, type: 3}
     - time: 0.05
-      value: {fileID: 21300000, guid: bd41fa53d21d3964fb83dc80bf9a3d82, type: 3}
+      value: {fileID: 21300000, guid: 0b338d73cd7203444ac3f096a67025f0, type: 3}
     - time: 0.11666667
       value: {fileID: 21300000, guid: 7dae0b793f9e3514c960d4213159ccd5, type: 3}
     - time: 0.16666667
@@ -53,7 +53,7 @@ AnimationClip:
       isPPtrCurve: 1
     pptrCurveMapping:
     - {fileID: 21300000, guid: 0b338d73cd7203444ac3f096a67025f0, type: 3}
-    - {fileID: 21300000, guid: bd41fa53d21d3964fb83dc80bf9a3d82, type: 3}
+    - {fileID: 21300000, guid: 0b338d73cd7203444ac3f096a67025f0, type: 3}
     - {fileID: 21300000, guid: 7dae0b793f9e3514c960d4213159ccd5, type: 3}
     - {fileID: 21300000, guid: 66c9a315a78f15046ae1e2725ece0672, type: 3}
     - {fileID: 21300000, guid: 98a61e69161b52c45aa7a2c98d589720, type: 3}
@@ -83,4 +83,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0
+    functionName: Reverse_2
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

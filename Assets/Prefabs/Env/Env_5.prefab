@@ -47,11 +47,11 @@ MonoBehaviour:
   _currentVerticalSpeed: 0
   _characterBounds:
     m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 2.52, y: 0.8, z: 0}
+    m_Extent: {x: 0.5, y: 0.8, z: 0}
   _otherLayer:
     serializedVersion: 2
     m_Bits: 128
-  _detectorCount: 29
+  _detectorCount: 10
   _detectionRayLength: 0.1
   _rayBuffer: 0.1
   _colUp_other: 0
@@ -87,8 +87,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7275466636331475419}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.34, y: 1.01, z: 0}
-  m_LocalScale: {x: 4.96, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7275466636063121447}
   m_Father: {fileID: 0}
@@ -134,7 +134,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8804d04b3e827a14eb18f40ce9be36a5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

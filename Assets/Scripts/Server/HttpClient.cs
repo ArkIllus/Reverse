@@ -35,6 +35,8 @@ public class HttpClient : MonoBehaviour
                 //SceneMgr.GetInstance().LoadSceneAsync(SceneData_SO.externalScene);
                 //FindObjectOfType<External_UI>().gameObject.SetActive(true);
                 External_UI.ShowPanelsAtStart();
+                //显示标题
+                UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
             }
             else if (cm.MessageId == 3000) {
                 Debug.Log("Register fail");
