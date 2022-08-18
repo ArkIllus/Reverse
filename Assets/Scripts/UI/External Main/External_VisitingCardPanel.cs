@@ -6,6 +6,9 @@ using DG.Tweening;
 
 public class External_VisitingCardPanel : BasePanel
 {
+    public Text textUID;
+    public Text textUsername;
+
     public float fadeInTime = 0.3f;
     public float fadeOutTime = 0.2f;
     public CanvasGroup canvasGroup;
@@ -42,6 +45,9 @@ public class External_VisitingCardPanel : BasePanel
 
     public override void ShowMe()
     {
+        textUID.text = GameManager_global.GetInstance().gameData_SO.uid.ToString();
+        textUsername.text = GameManager_global.GetInstance().gameData_SO.username_memo;
+
         UIManager.GetInstance().GetPanel<External_AchievementsPanel>("External_AchievementsPanel").HideMe();
 
         this.gameObject.SetActive(true);

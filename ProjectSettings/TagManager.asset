@@ -9,6 +9,7 @@ TagManager:
   - ReverseGround
   - Rebirth
   - MovingGround
+  - Ice
   layers:
   - Default
   - TransparentFX
@@ -63,4 +64,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 4007790177
+    locked: 0
+  - name: FireIce Layer
+    uniqueID: 3427710611
     locked: 0

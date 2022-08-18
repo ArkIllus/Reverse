@@ -1,19 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ScreenSpaceCanvas : Singleton<ScreenSpaceCanvas>
 {
-    protected override void Awake()
+    private bool isShowQuitPanel;
+    public QuitPanel quitPanel;
+    public Button btnQuit;
+
+    //protected override void Awake()
+    //{
+    //    if (instance != null)
+    //    {
+    //        Destroy(this.gameObject);
+    //    }
+    //    else
+    //    {
+    //        instance = this;
+    //        DontDestroyOnLoad(this.gameObject); //optional
+    //    }
+    //}
+
+    private void Update()
     {
-        if (instance != null)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            instance = this;
-            DontDestroyOnLoad(this.gameObject); //optional
+            isShowQuitPanel = !isShowQuitPanel;
+            if (isShowQuitPanel)
+            {
+                quitPanel.ShowMe();
+            }
+            else
+            {
+                quitPanel.HideMe();
+            }
         }
     }
 }

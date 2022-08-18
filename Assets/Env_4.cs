@@ -3,29 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Env_4 : Env_Manager
+public class Env_4 : MonoBehaviour
 {
     public Rigidbody2D rig;
 
-    public override void Awake()
+    //public GameManager manager;
+    
+    bool _active;
+    private void Awake()
     {
-        base.Awake();
-    }
+        Invoke(nameof(Activate), 0.5f);
+        rig = GetComponent<Rigidbody2D>();
+        //box = GetComponent<BoxCollider2D>();
 
-    public override void Update()
+    }
+    void Activate() => _active = true;
+    private void Update()
     {
-        base.Update();
-        Calculate();
+      
+       
         Calculate1();
     }
-    private void Calculate()
-    {
-        if (_colUp_other || _colRight_other || _colLeft_other || _colDown_other)
-        {
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            GameManager.Instance.player.Die();
-        }
-    }
+    
     private void Calculate1()
     {
         rig.gravityScale = !GameManager.Instance.isReverse ? Mathf.Abs(rig.gravityScale) : Mathf.Abs(rig.gravityScale) * -1;

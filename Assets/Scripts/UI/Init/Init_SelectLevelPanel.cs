@@ -111,24 +111,31 @@ public class Init_SelectLevelPanel : BasePanel
         switch (btnName)
         {
             case "Button1":
-                ClickLevel(1);
+                ClickLevel(0);
                 break;
             case "Button2":
-                ClickLevel(2);
+                ClickLevel(1);
                 break;
             case "Button3":
-                ClickLevel(3);
+                ClickLevel(2);
                 break;
             case "ButtonBack":
                 ClickBack();
                 break;
         }
     }
-    public void ClickLevel(int level)
+    public void ClickLevel(int levelIndex)
     {
-        Debug.Log("ClickLevel " + level);
-        SceneMgr.GetInstance().LoadSceneAsync("level" + level + "_1");
+        //TODO 场景转换过渡
+
+        Debug.Log("ClickLevel " + levelIndex);
+        //SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.Levels[levelIndex], () => {
+        //    //TODO：加载完成后Unload所有的UI（会有一瞬间出现2个EventSystem，会报warning）  //[注]改到了新场景的UIManager_MonoProxy的OnEnable()中进行
+        //    UIManager.GetInstance().UnloadAllUI();
+        //}); 
+        SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.Levels[levelIndex]);
     }
+
     public void ClickBack()
     {
         Debug.Log("ClickBack");

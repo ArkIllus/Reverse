@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 881740601863224163, guid: 2a77a262d9a933d459825ffec75cc3ba, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -98,7 +98,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.065933704, y: -0.31135356}
+  m_Offset: {x: 0.05721259, y: -0.33533633}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -109,7 +109,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8681326, y: 0.37729287}
+  m_Size: {x: 0.62394476, y: 0.32932734}
   m_EdgeRadius: 0
 --- !u!114 &3719760065331936609
 MonoBehaviour:
@@ -138,18 +138,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d78a9e0b0d032b43a330e1fd2245f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHorizontalSpeed: 0
-  _currentVerticalSpeed: 0
-  _characterBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  _otherLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  _detectorCount: 3
-  _detectionRayLength: 0.1
-  _rayBuffer: 0.1
-  _colUp_other: 0
-  _colRight_other: 0
-  _colDown_other: 0
-  _colLeft_other: 0

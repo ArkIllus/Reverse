@@ -86,6 +86,34 @@ public class UIManager : BaseManager<UIManager>
         obj = ResourceManager.GetInstance().Load<GameObject>(path_UI + "EventSystem");
         GameObject.DontDestroyOnLoad(obj);
     }
+    public void LoadAllUIatStart()
+    {
+        //TODO:临时解决方法，判断是否已有Canvas和EventSystem
+        if (_canvas != null)
+        {
+            _canvas.worldCamera = Camera.main;
+            canvas = _canvas.transform as RectTransform;
+            GameObject.DontDestroyOnLoad(canvas.gameObject);
+            //找到各层
+            bot = canvas.Find("Bot");
+            mid = canvas.Find("Mid");
+            top = canvas.Find("Top");
+            system = canvas.Find("System");
+
+            GameObject.DontDestroyOnLoad(EventSystem.current.gameObject);
+        }
+    }
+    public void UnloadAllUI()
+    {
+        if (canvas != null)
+        {
+            Debug.Log("run UnloadAllUI");
+            GameObject.Destroy(canvas.gameObject);
+            GameObject.Destroy(EventSystem.current.gameObject);
+            canvas = null;
+            _canvas = null;
+        }
+    }
 
     /// <summary>
     /// 显示面板

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Init_MainPanel : BasePanel
 {
@@ -43,19 +44,28 @@ public class Init_MainPanel : BasePanel
     {
         Debug.Log("ClickNewGame");
 
-        //TODO 进入新的游戏 切换场景
-        throw new NotImplementedException();
+        //clear关卡记录
+        GameManager_global.GetInstance().gameData_SO.ClearLevelRecords();
+
+        //TODO 场景转换过渡
+        //进入第一章
+        SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.Levels[0]);
     }
     public void ClickContinueGame()
     {
         Debug.Log("ClickContinueGame");
 
+        //clear关卡记录
+        GameManager_global.GetInstance().gameData_SO.ClearLevelRecords();
+
         //TODO 继续游戏 切换场景
-        throw new NotImplementedException();
     }
     public void ClickSelectLevel()
     {
         Debug.Log("ClickSelectLevel");
+
+        //clear关卡记录
+        GameManager_global.GetInstance().gameData_SO.ClearLevelRecords();
 
         //直接隐藏此panel
         HideMe();
@@ -83,12 +93,19 @@ public class Init_MainPanel : BasePanel
     {
         Debug.Log("ClickQuit");
 
-        //直接隐藏此panel
-        HideMe();
+        if (SceneManager.GetActiveScene().name == GameData_SO.InitScene)
+        {
+            //直接隐藏此panel
+            HideMe();
 
-        UIManager.GetInstance().ShowPanel<Init_1stPanel>("Init_1stPanel", E_UI_Layer.Mid);
+            UIManager.GetInstance().ShowPanel<Init_1stPanel>("Init_1stPanel", E_UI_Layer.Mid);
 
-        //显示标题
-        UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
+            //显示标题
+            UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
+        }
+        else if(SceneManager.GetActiveScene().name == GameData_SO.AfterLoginScene)
+        {
+            SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.InitScene);
+        }
     }
 }

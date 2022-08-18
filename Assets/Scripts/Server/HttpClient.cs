@@ -29,11 +29,9 @@ public class HttpClient : MonoBehaviour
 
                 ///进行注册成功的处理
                 //卸载Init_XXX面板 //TODO:优化
-                //FindObjectOfType<Init_UI>().HideAndDestroyAllPanels();
                 Init_UI.HidePanelsAfterLogin();
                 ////异步加载ExternalScene  加载过程中播放转场画面（+进度条）
                 //SceneMgr.GetInstance().LoadSceneAsync(SceneData_SO.externalScene);
-                //FindObjectOfType<External_UI>().gameObject.SetActive(true);
                 External_UI.ShowPanelsAtStart();
                 //显示标题
                 UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();

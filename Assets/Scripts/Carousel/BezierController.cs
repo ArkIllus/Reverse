@@ -27,7 +27,14 @@ public class BezierController : MonoBehaviour
 
     [Header("自定义效果 By Bob")]
     public float addTofirst = 0.15f;
-    public float maxScale = 1.5f;
+    public float minScale = 1.2f;
+    public float maxMul = 1.5f;
+    public float autoPixelSpeedX = 0.2f;
+
+    private Vector2 pos;
+    private Vector2 oldPos;
+    private float scaleFactor;
+    private float colorFactor;
 
     void Start()
     {
@@ -38,7 +45,6 @@ public class BezierController : MonoBehaviour
         InitItem();
     }
 
-    Vector2 oldPos;
     void Update()
     {
         //生成贝塞尔曲线点 LineRender
@@ -55,37 +61,51 @@ public class BezierController : MonoBehaviour
             //Debug.Log("oldPos = " + oldPos);
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0)) //鼠标右键按下时，跟随鼠标转动
         {
-            Vector2 pos = new Vector2(Input.mousePosition.x - oldPos.x, Input.mousePosition.y - oldPos.y);
-            for (int i = 0; i < content.childCount; i++)
-            {
-                CarouselItem obj = content.GetChild(i).GetComponent<CarouselItem>();
-                objMove(pos, obj);
-
-                RectTransform rectTransform = obj.GetComponent<RectTransform>();
-                //尺寸渐变
-                GradualScale(obj, rectTransform);
-            }
-            oldPos = Input.mousePosition;
+            pos = new Vector2(Input.mousePosition.x - oldPos.x, Input.mousePosition.y - oldPos.y);
         }
-        #endregion
+        else //鼠标右键不按时，自动转动
+        {
+            pos = new Vector2(autoPixelSpeedX, 0);
+        }
+        //转动
+        for (int i = 0; i < content.childCount; i++)
+        {
+            CarouselItem obj = content.GetChild(i).GetComponent<CarouselItem>();
+            objMove(pos, obj);
 
+            RectTransform rectTransform = obj.GetComponent<RectTransform>();
+            //尺寸渐变
+            GradualScaleAndColor(obj, rectTransform);
+        }
+        oldPos = Input.mousePosition;
+        #endregion
     }
 
-    public void GradualScale(CarouselItem obj, RectTransform rectTransform)
+    /// <summary>
+    /// 尺寸和明暗渐变
+    /// obj.BezierT 0.25 ~0.5 ~0.25
+    /// localScale  1.2 ~1.2*1.5 ~1.2
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="rectTransform"></param>
+    public void GradualScaleAndColor(CarouselItem obj, RectTransform rectTransform)
     {
-        //尺寸渐变
-        // obj.BezierT 0.25 ~0.5 ~0.25
-        // localScale  1 ~1.5 ~1
+        //scaleFactor的范围：1~maxMul
         if (obj.BezierT < 0.25f || obj.BezierT > 0.75f)
         {
-            rectTransform.localScale = Vector3.one;
+            scaleFactor = 1f;
         }
         else
         {
-            rectTransform.localScale = Vector3.one * (1.5f - Mathf.Abs(obj.BezierT - 0.5f) * 2f);
+            scaleFactor = (maxMul - Mathf.Abs(obj.BezierT - 0.5f) * 2f);
         }
+        rectTransform.localScale = Vector3.one * minScale * scaleFactor;
+
+        //scaleFactor的范围：1~maxMul =>映射到 colorFactor的范围：0.5~1
+        colorFactor = (maxMul - 1) * 2f * (scaleFactor-1) + 0.5f;
+        obj.gameObject.GetComponent<Image>().color = rectTransform.GetChild(0).GetComponent<Image>().color = new Color(colorFactor, colorFactor, colorFactor, 1);
     }
 
     #region 初始化item平均布局
@@ -113,7 +133,7 @@ public class BezierController : MonoBehaviour
             RectTransform rectTransform = obj.GetComponent<RectTransform>();
             rectTransform.anchoredPosition3D = _pos;
             //尺寸渐变
-            GradualScale(obj, rectTransform);
+            GradualScaleAndColor(obj, rectTransform);
             SetImageSprite(1, obj); //修改图片
         }
     }
@@ -152,9 +172,7 @@ public class BezierController : MonoBehaviour
         RectTransform rectTransform = obj.GetComponent<RectTransform>();
         rectTransform.anchoredPosition3D = _pos;
         //尺寸渐变
-        // obj.BezierT 0 ~0.5 ~1
-        // localScale  1 ~1.5 ~1
-        rectTransform.localScale = Vector3.one * (1.5f - Mathf.Abs(obj.BezierT - 0.5f));
+        GradualScaleAndColor(obj, rectTransform);
     }
 
     #endregion

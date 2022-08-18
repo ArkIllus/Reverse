@@ -1057,7 +1057,8 @@ MonoBehaviour:
   usernameInput: 
   passwordInput: 
   textTip: {fileID: 815517169815192304}
-  fadeTime: 1
+  fadeInTime: 0.8
+  fadeOutTime: 0.3
   canvasGroup: {fileID: 1285931200118882825}
   rectTransform: {fileID: 815517170552607833}
 --- !u!225 &1285931200118882825

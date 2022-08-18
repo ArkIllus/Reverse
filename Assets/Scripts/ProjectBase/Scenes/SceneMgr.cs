@@ -9,12 +9,13 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class SceneMgr : BaseManager<SceneMgr>
 {
-    public void LoadScene(string name, UnityAction fun)
+    public void LoadScene(string name, UnityAction fun = null)
     {
         // 场景同步加载
         SceneManager.LoadScene(name);
         //加载完成过后 才会执行fun
-        fun();
+        if (fun != null)
+            fun();
     }
 
     //提供给外部的 异步加载的接口方法

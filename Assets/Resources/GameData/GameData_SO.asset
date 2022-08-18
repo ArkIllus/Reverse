@@ -17,5 +17,13 @@ MonoBehaviour:
   uid: 0
   nameid: 0
   bio: 0
-  rebirth_pos: {x: 0, y: 0, z: 0}
-  rebirth_Reverse: 0
+  levelRecords:
+  - sceneName: Level1
+    rebirth_pos: {x: 0, y: 0, z: 0}
+    rebirth_Reverse: 0
+  - sceneName: Level2
+    rebirth_pos: {x: 0, y: 0, z: 0}
+    rebirth_Reverse: 0
+  - sceneName: Level3
+    rebirth_pos: {x: 0, y: 0, z: 0}
+    rebirth_Reverse: 0

@@ -88,8 +88,14 @@ namespace TarodevController
         public bool CanReverse;
 
         //Cinemachine
-        private Cinemachine.CinemachineImpulseSource impulseSource;
+        public Cinemachine.CinemachineImpulseSource impulseSourceXY;
+        public Cinemachine.CinemachineImpulseSource impulseSourceX;
+        public Cinemachine.CinemachineImpulseSource impulseSourceY;
         public Animator anim;
+
+        //shader
+        public SpriteRenderer Sp;
+        private Material material;
 
         void Awake()
         {
@@ -98,26 +104,32 @@ namespace TarodevController
             _playerAnimator = GetComponentInChildren<PlayerAnimator>();
             dashWave = GetComponentInChildren<DashWave>();
             deathCircle = GetComponentInChildren<DeathCircle>();
-            impulseSource = GetComponent<Cinemachine.CinemachineImpulseSource>();
+            //impulseSource = GetComponentInChildren<Cinemachine.CinemachineImpulseSource>();
             Parent = transform.parent; 
             trailRenderer = GetComponentInChildren<TrailRenderer>();
-            //trailRenderer.enabled = false;
+            trailRenderer.enabled = false; //避免开局位移产生拖尾
+            material = Sp.material;
         }
 
         void Activate() => _active = true;
 
         private void Start()
         {
-            //读取玩家重生点，若有则玩家在该点（只改位置，不设重生点）
-            if (GameManager_global.GetInstance().gameData_SO.rebirth_pos != Vector3.one)
+            //读取玩家关卡记录的重生点，若有非零记录则玩家在该点（只改位置，不设重生点）
+            for (int i = 0; i < GameData_SO.Levels.Length; i++)
             {
-                transform.position = GameManager_global.GetInstance().gameData_SO.rebirth_pos;
-                GameManager.Instance.isReverse = GameManager_global.GetInstance().gameData_SO.rebirth_Reverse;
+                if (SceneManager.GetActiveScene().name == GameData_SO.Levels[i] &&
+                    (GameManager_global.GetInstance().gameData_SO.levelRecords[i].rebirth_pos != Vector3.zero))
+                {
+                    transform.position = GameManager_global.GetInstance().gameData_SO.levelRecords[i].rebirth_pos;
+                    GameManager.Instance.isReverse = GameManager_global.GetInstance().gameData_SO.levelRecords[i].rebirth_Reverse;
+                }
             }
+            trailRenderer.enabled = true;
 
             //开始时，屏幕全黑，然后圈从内向外变大，显示游戏画面
             deathCircle.SetCircleMin();
-            Invoke(nameof(PlayCircleInToOut), 0.1f); //不Invoke0.1秒的话容易卡掉没效果
+            Invoke(nameof(PlayCircleInToOut), 0.4f); //不Invoke0.4秒的话容易卡掉没效果
         }
 
         void PlayCircleInToOut()
@@ -125,22 +137,13 @@ namespace TarodevController
             StartCoroutine(deathCircle.PlayCircleInToOut());
         }
 
-        //private void OnEnable()
-        //{
-        //    GameManager.Instance.player = this;
-        //}
-        //private void OnDisable()
-        //{
-        //    GameManager.Instance.player = null;
-        //}
-
         private void Update()
         {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Return))
-            {
-                //从内向外播放圆圈
-                StartCoroutine(deathCircle.PlayCircleInToOut());
-            }
+            //if (UnityEngine.Input.GetKeyDown(KeyCode.Return))
+            //{
+            //    //从内向外播放圆圈
+            //    StartCoroutine(deathCircle.PlayCircleInToOut());
+            //}
 
             if (!_active) return;
             if (isDead) return; //死亡时禁用Update：人物操作、移动
@@ -161,6 +164,7 @@ namespace TarodevController
             CalculateJump(); // Possibly overrides vertical
 
             MoveCharacter(); // Actually perform the axis movement
+            Caculate_Enchanting();
         }
 
         #region Gather Input
@@ -212,6 +216,7 @@ namespace TarodevController
         #region Collisions
         public GameObject MovingGround;
         private Transform Parent;
+        public GameObject Ice;
 
         [Header("COLLISION")][SerializeField] private Bounds _characterBounds;
         [SerializeField] private LayerMask _groundLayer;
@@ -230,6 +235,7 @@ namespace TarodevController
         //  [SerializeField] public bool _colUp_Rebirth,_colRight_Rebirth,_colDown_Rebirth,_colLeft_Rebirth;
         [SerializeField] public bool _colUp_Moving, _colRight_Moving, _colDown_Moving, _colLeft_Moving;
 
+        [SerializeField] public bool _colUP_Ice, _colRight_Ice, _colDown_Ice, _colLeft_Ice;
 
 
         private float _timeLeftGrounded;
@@ -322,6 +328,12 @@ namespace TarodevController
             // Caculate_ReverseGround(_colUp_ReverseGround, _colDown_ReverseGround, _colLeft_ReverseGround, _colRight_ReverseGround);
 
 
+            _colDown_Ice = RunDetection_Ice(_raysDown);
+            _colLeft_Ice = RunDetection_Ice(_raysLeft);
+            _colRight_Ice = RunDetection_Ice(_raysRight);
+            _colUP_Ice = RunDetection_Ice(_raysUp);
+            Caculate_Ice(_colUP_Ice, _colDown_Ice, _colLeft_Ice, _colRight_Ice);
+
 
 
 
@@ -369,6 +381,12 @@ namespace TarodevController
             bool RunDetection_Moving(RayRange range)
             {
                 return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer) ? Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer).collider.gameObject.CompareTag("MovingGround") && (MovingGround = Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer).collider.gameObject) : false);
+            }
+
+
+            bool RunDetection_Ice(RayRange range)
+            {
+                return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer) ? Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer).collider.gameObject.CompareTag("Ice") && (Ice = Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer).collider.gameObject) : false);
             }
 
             //bool RunDetection_ReverseGround(RayRange range)
@@ -553,37 +571,28 @@ namespace TarodevController
 
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            _currentHorizontalSpeed = currDashSpeed * direction.x;
-            _currentVerticalSpeed = currDashSpeed * direction.y;
-
             //相机抖动
             //[DOTween]使用cinemachine相机下，其Transform组件不可被代码修改
             //Camera.main.transform.DOComplete();
             //var tmp = Camera.main.transform.DOShakePosition(.2f, .5f, 14, 90, false, true);
             //tmp.onComplete += () => { print("相机抖动完成"); };
             //[Cinemachine]
-            impulseSource.GenerateImpulse();
             //impulseSource.GenerateImpulse(Camera.main.transform.forward);
+            if (currDirection_X != 0 && currDirection_Y != 0)
+            {
+                impulseSourceXY.GenerateImpulse();
+            } 
+            else if (currDirection_X != 0 && currDirection_Y == 0)
+            {
+                impulseSourceX.GenerateImpulse();
+            }
+            else if (currDirection_X == 0 && currDirection_Y != 0)
+            {
+                impulseSourceY.GenerateImpulse();
+            }
+
+            _currentHorizontalSpeed = currDashSpeed * direction.x;
+            _currentVerticalSpeed = currDashSpeed * direction.y;
 
             //播放冲刺屏幕波纹特效
             //FindObjectOfType<RippleEffect>().Emit(Camera.main.WorldToViewportPoint(transform.position));
@@ -906,6 +915,9 @@ namespace TarodevController
                 CanReverse = false;
                 ReverseThisFrame = true;
                 //JumpingThisFrame = true;
+
+                ////相机抖动
+                //impulseSourceY.GenerateImpulse();
             }
             else
             {
@@ -986,6 +998,58 @@ namespace TarodevController
 
         #endregion
 
+        #region Enchanting
+        [Header("Enchant")]
+        public float enchant_Value;
+        public bool is_Enchant;
+        [SerializeField] private float enchant_Time;
+        [SerializeField] public bool enchant_hot;
+        [SerializeField] public bool enchant_cold;
+        private void Caculate_Enchanting()
+        {
+
+            if (!is_Enchant)
+            {
+                if (enchant_Value != 0)
+                {
+                    enchant_Time += Time.deltaTime;
+                    if (enchant_Time >= 10f)
+                    {
+                        enchant_Value = 0;
+                        enchant_Time = 0;
+                    }
+                }
+
+            }
+            else
+            {
+                enchant_Time = 0;
+            }
+            enchant_hot = enchant_Value >= 10f ? true : false;
+            enchant_cold = enchant_Value <= -10f ? true : false;
+            if (enchant_hot)
+            {
+                material.EnableKeyword("OUTBASE_ON");
+                material.DisableKeyword("ALPHAOUTLINE_ON");
+            }
+            else if (enchant_cold)
+            {
+                material.EnableKeyword("ALPHAOUTLINE_ON");
+                material.DisableKeyword("OUTBASE_ON");
+            }
+            else
+            {
+                material.DisableKeyword("ALPHAOUTLINE_ON");
+                material.DisableKeyword("OUTBASE_ON");
+            }
+
+
+
+        }
+
+
+
+        #endregion
 
         #region CalculateEnv
 
@@ -1021,6 +1085,55 @@ namespace TarodevController
                 transform.parent = Parent;
             }
         }
+
+
+        private void Caculate_Ice(bool up, bool down, bool left, bool right)
+        {
+            if (enchant_hot && isDashing)
+            {
+                if (up)
+                {
+                    if (currDirection_Y > 0)
+                    {
+                        Debug.Log(1);
+                        Invoke("Destroy_Ice", 1);
+                    }
+                }
+                else if (down)
+                {
+                    if (currDirection_Y < 0)
+                    {
+                        Debug.Log(2);
+                        Invoke("Destroy_Ice", 1);
+                    }
+                }
+                else if (left)
+                {
+                    if (currDirection_X < 0)
+                    {
+                        Debug.Log(3);
+                        Invoke("Destroy_Ice", 1);
+                    }
+                }
+                else if (right)
+                {
+                    if (currDirection_X > 0)
+                    {
+                        Debug.Log(4);
+                        Invoke("Destroy_Ice", 1);
+                    }
+                }
+            }
+
+
+
+
+        }
+        private void Destroy_Ice()
+        {
+            Destroy(Ice);
+        }
+
 
 
 

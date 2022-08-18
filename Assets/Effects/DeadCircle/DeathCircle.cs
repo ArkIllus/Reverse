@@ -66,6 +66,7 @@ public class DeathCircle : MonoBehaviour
 
         //circle.Center.SetValue(new Vector2Parameter(Camera.main.WorldToViewportPoint(transform.position)));//0~1
         circle.Center.SetValue(new Vector2Parameter(Camera.main.WorldToScreenPoint(transform.position))); //1920 1080
+        Debug.Log("circle.Center = " + circle.Center);
 
         //isPlaying = true;
         circle.Radius.SetValue(new FloatParameter(minRadius));

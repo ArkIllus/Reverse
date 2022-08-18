@@ -61,7 +61,7 @@ public class Talkable : MonoBehaviour
 
     private void Update()
     {
-        if (isEntered && (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0)))
+        if (isEntered && (Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonDown(0)))
         {
             tipUI.SetActive(false);
             DialogueManager.Instance.ShowDialogue(this, lines, characterSprite, characterName);

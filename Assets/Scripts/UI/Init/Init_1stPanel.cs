@@ -7,7 +7,8 @@ using DG.Tweening;
 public class Init_1stPanel : BasePanel
 {
     public Button btnStart;
-    [SerializeField] private Button btnEsc;
+    public Image imageBtnStart;
+    public Button btnEsc;
     public const string str_Init_LoginPanel = "Init_LoginPanel";
 
     public float fadeInTime = 3.0f;
