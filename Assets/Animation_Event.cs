@@ -6,10 +6,9 @@ public class Animation_Event : MonoBehaviour
 {
     public Animator anim;
 
-
     private int reverseLayer;
-    // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
         anim = GetComponent<Animator>();
 
@@ -17,28 +16,22 @@ public class Animation_Event : MonoBehaviour
         reverseLayer = anim.GetLayerIndex("Blue");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void Reverse_1()
     {
-        Debug.Log(1);
-
+        Debug.Log("Reverse_1");
         if (GameManager.Instance.isReverse)
         {
+            //if (anim == null) Debug.Log("anim == null");
             anim.SetLayerWeight(reverseLayer, 1f);
         }
-        //anim.SetLayerWeight(reverseLayer, 1f);
-
     }
 
     public void Reverse_2()
     {
-        Debug.Log(3);
+        Debug.Log("Reverse_2");
         if (!GameManager.Instance.isReverse)
+        {
             anim.SetLayerWeight(reverseLayer, 0f);
-
+        }
     }
 }

@@ -47,7 +47,7 @@ public class Env_cold : MonoBehaviour
             if (enchat_Time >= 0.1f)
             {
                 _player.enchant_Value -= 1;
-                _player.enchant_Value = Mathf.Clamp(_player.enchant_Value, -75f, 75f);
+                _player.enchant_Value = Mathf.Clamp(_player.enchant_Value, -100f, 100f);
                 _player.is_Enchant = true;
                 enchat_Time = 0;
             }

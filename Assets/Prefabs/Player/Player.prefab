@@ -19787,6 +19787,7 @@ MonoBehaviour:
   impulseSourceX: {fileID: 3082109473505360896}
   impulseSourceY: {fileID: 6848370171660777939}
   anim: {fileID: 4328137887041379177}
+  animation_Event: {fileID: 697532279}
   Sp: {fileID: 7301912710596531848}
   MovingGround: {fileID: 0}
   Ice: {fileID: 0}

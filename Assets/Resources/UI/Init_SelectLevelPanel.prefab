@@ -78,7 +78,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Level2
+  m_Text: Level3
 --- !u!1 &455212018937060702
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,7 +398,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftDis: 0
   rightDis: 1
-  speed: 1000
+  speed: -1000
   content: {fileID: 1543375829273379091}
   spriteList:
   - {fileID: 21300000, guid: 57f7c51663b126f4d84078c4ecef7dd1, type: 3}
@@ -407,9 +407,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 57f7c51663b126f4d84078c4ecef7dd1, type: 3}
   - {fileID: 21300000, guid: 57f7c51663b126f4d84078c4ecef7dd1, type: 3}
   bezierPointList:
-  - {x: 19, y: 3.7, z: 0}
-  - {x: 21, y: 11.5, z: 0}
   - {x: 28, y: 11.85, z: 0}
+  - {x: 21, y: 11.5, z: 0}
+  - {x: 19, y: 3.7, z: 0}
   addTofirst: 0.15
   minScale: 1.2
   maxMul: 1.5
@@ -786,7 +786,7 @@ GameObject:
   - component: {fileID: 8552090075036944649}
   - component: {fileID: 8018810516490095091}
   m_Layer: 5
-  m_Name: Button2
+  m_Name: Button3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -938,7 +938,7 @@ GameObject:
   - component: {fileID: 7351734693387126792}
   - component: {fileID: 8709528477553424891}
   m_Layer: 5
-  m_Name: Button3
+  m_Name: Button2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1153,7 +1153,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Level3
+  m_Text: Level2
 --- !u!1 &3380911974432423658
 GameObject:
   m_ObjectHideFlags: 0

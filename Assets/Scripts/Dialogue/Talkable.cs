@@ -61,8 +61,17 @@ public class Talkable : MonoBehaviour
 
     private void Update()
     {
+        if (DialogueManager.Instance.dialogueBox.activeInHierarchy)
+            return;
         if (isEntered && (Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonDown(0)))
         {
+            if (DialogueManager.Instance.justEnd) //避免2次Input引起的问题
+            {
+                Debug.Log(333);
+                DialogueManager.Instance.justEnd = false;
+                return;
+            }
+            Debug.Log(444);
             tipUI.SetActive(false);
             DialogueManager.Instance.ShowDialogue(this, lines, characterSprite, characterName);
         }

@@ -22,7 +22,7 @@ MonoBehaviour:
     rebirth_pos: {x: 0, y: 0, z: 0}
     rebirth_Reverse: 0
   - sceneName: Level2
-    rebirth_pos: {x: 0, y: 0, z: 0}
+    rebirth_pos: {x: -14.670004, y: 1.4599998, z: 0}
     rebirth_Reverse: 0
   - sceneName: Level3
     rebirth_pos: {x: 0, y: 0, z: 0}

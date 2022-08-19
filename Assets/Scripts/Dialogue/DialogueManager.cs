@@ -18,6 +18,7 @@ public class DialogueManager : Singleton<DialogueManager>
     [SerializeField] private Talkable currentTalkable;
     [SerializeField] private int currntLine;
     [SerializeField] private bool isScrolling;
+    public bool justEnd; //最后一句话刚结束
 
     protected override void Awake()
     {
@@ -38,12 +39,11 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private void Update()
     {
-        //if (!this.gameObject.activeInHierarchy || isScrolling)
-        if (!dialogueBox.gameObject.activeInHierarchy || isScrolling)
+        if (!dialogueBox.activeInHierarchy || isScrolling)
                 return;
 
-        //if (Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonUp(0))
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonUp(0))
+        //if (Input.GetMouseButtonUp(0))
         {
             currntLine++;
 
@@ -55,6 +55,7 @@ public class DialogueManager : Singleton<DialogueManager>
             }
             else
             {
+                justEnd = true;
                 Debug.Log("111");
                 dialogueBox.SetActive(false); // hide box
                 GameManager.Instance.player.isTalking = false;
@@ -81,7 +82,7 @@ public class DialogueManager : Singleton<DialogueManager>
             nameText.text = characterName;
             dialogueBox.SetActive(true);
         }
-        else //对话未完成，则播放所有话
+        else //对话未完成，则播放所有话，从第一句开始
         {
             GameManager.Instance.player.isTalking = true;
             dialogueLines = newLines;

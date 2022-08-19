@@ -93,13 +93,16 @@ namespace TarodevController
         public Cinemachine.CinemachineImpulseSource impulseSourceY;
         public Animator anim;
 
+        public Animation_Event animation_Event;
+
         //shader
         public SpriteRenderer Sp;
         private Material material;
 
         void Awake()
         {
-            Invoke(nameof(Activate), 0.5f);
+            Invoke(nameof(PlayRebirthDissolve), 0.5f);
+            Invoke(nameof(Activate), 0.75f);
 
             _playerAnimator = GetComponentInChildren<PlayerAnimator>();
             dashWave = GetComponentInChildren<DashWave>();
@@ -123,13 +126,17 @@ namespace TarodevController
                 {
                     transform.position = GameManager_global.GetInstance().gameData_SO.levelRecords[i].rebirth_pos;
                     GameManager.Instance.isReverse = GameManager_global.GetInstance().gameData_SO.levelRecords[i].rebirth_Reverse;
+                    if (GameManager.Instance.isReverse)
+                    {
+                        animation_Event.Reverse_1();
+                    }
                 }
             }
             trailRenderer.enabled = true;
 
             //开始时，屏幕全黑，然后圈从内向外变大，显示游戏画面
             deathCircle.SetCircleMin();
-            Invoke(nameof(PlayCircleInToOut), 0.4f); //不Invoke0.4秒的话容易卡掉没效果
+            Invoke(nameof(PlayCircleInToOut), 0.5f); //不Invoke0.5秒的话容易卡掉没效果
         }
 
         void PlayCircleInToOut()
@@ -1025,6 +1032,11 @@ namespace TarodevController
             {
                 enchant_Time = 0;
             }
+            if (enchant_Value>= 100f || enchant_Value <= -100f)
+            {
+                Die();
+            }
+
             enchant_hot = enchant_Value >= 10f ? true : false;
             enchant_cold = enchant_Value <= -10f ? true : false;
             if (enchant_hot)
@@ -1153,25 +1165,28 @@ namespace TarodevController
 
         public void Die()
         {
+            impulseSourceXY.GenerateImpulse();
+
             if (isDead) return;
             //死亡时禁用Update：操作、移动
             isDead = true;
-            // 隐藏Player(Sprite)
-            Hide();
 
             StartCoroutine(Co_Die());
         }
         
         public IEnumerator Co_Die()
         {
-            //TODO 播放死亡动画和特效 （假装要花0.5秒）
-            yield return new WaitForSeconds(0.5f);
-
             //关闭拖尾渲染器
             trailRenderer.enabled = false;
 
-            //从外向内播放圆圈
+            //播放死亡动画和特效（花1.0秒）
+            StartCoroutine(PlayDeathDissolve());
+
+            //从外向内播放圆圈（花1.0秒）
             yield return deathCircle.PlayCircleOutToIn();
+
+            material.DisableKeyword("FADE_ON");
+            material.SetFloat("_FadeAmount", 0);
 
             //TODO
             //做法1.死亡后重载场景
@@ -1196,6 +1211,32 @@ namespace TarodevController
 
             ////开启拖尾渲染器
             //trailRenderer.enabled = true;
+        }
+
+        //死亡的消融dissolve特效
+        public IEnumerator PlayDeathDissolve()
+        {
+            material.EnableKeyword("FADE_ON");
+            material.SetFloat("_FadeAmount", 0);
+            DOTween.To(() => material.GetFloat("_FadeAmount"), x => material.SetFloat("_FadeAmount", x), 1f, 1f).onComplete += () =>
+            {
+                // 隐藏Player(Sprite)
+                Hide();
+            };
+            yield return new WaitForSeconds(1f); //TODO:优化
+        }
+
+        //重生的消融dissolve特效
+        public void PlayRebirthDissolve()
+        //public IEnumerator PlayRebirthDissolve()
+        {
+            material.EnableKeyword("FADE_ON");
+            material.SetFloat("_FadeAmount", 1);
+            DOTween.To(() => material.GetFloat("_FadeAmount"), x => material.SetFloat("_FadeAmount", x), 0f, 1f).onComplete += () =>
+            {
+                material.DisableKeyword("FADE_ON");
+            };
+            //yield return new WaitForSeconds(1f); //TODO:优化
         }
 
         public void temp_DeathAndRebirth()

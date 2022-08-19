@@ -11,7 +11,8 @@ public class DeathCircle : MonoBehaviour
 
     public float maxRadius = 1f;
     public float minRadius = 0f;
-    public float duration = 0.5f;
+    public float durationInToOut = 0.5f;
+    public float durationOutToIn = 1f;
 
     //private bool outToIn; // true 从外向内播放圆圈
     //                      // false 从内向外播放圆圈
@@ -56,8 +57,8 @@ public class DeathCircle : MonoBehaviour
 
         //isPlaying = true;
         circle.Radius.SetValue(new FloatParameter(maxRadius));
-        DOTween.To(() => circle.Radius.value, x => circle.Radius.value = x, minRadius, duration);
-        yield return new WaitForSeconds(duration); //TODO优化
+        DOTween.To(() => circle.Radius.value, x => circle.Radius.value = x, minRadius, durationOutToIn);
+        yield return new WaitForSeconds(durationOutToIn); //TODO优化
         //isPlaying = false;
     }
     public IEnumerator PlayCircleInToOut()
@@ -71,8 +72,8 @@ public class DeathCircle : MonoBehaviour
         //isPlaying = true;
         circle.Radius.SetValue(new FloatParameter(minRadius));
         circle.isActive.SetValue(new BoolParameter(true));
-        DOTween.To(() => circle.Radius.value, x => circle.Radius.value = x, maxRadius, duration);
-        yield return new WaitForSeconds(duration); //TODO优化
+        DOTween.To(() => circle.Radius.value, x => circle.Radius.value = x, maxRadius, durationInToOut);
+        yield return new WaitForSeconds(durationInToOut); //TODO优化
         //isPlaying = false;
 
         circle.isActive.SetValue(new BoolParameter(false));
