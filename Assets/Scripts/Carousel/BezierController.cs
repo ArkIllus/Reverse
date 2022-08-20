@@ -26,7 +26,7 @@ public class BezierController : MonoBehaviour
     public List<Vector3> bezierPointList;
 
     [Header("自定义效果 By Bob")]
-    public float addTofirst = 0.15f;
+    public float addTofirst = -0.15f;
     public float minScale = 1.2f;
     public float maxMul = 1.5f;
     public float autoPixelSpeedX = 0.2f;
@@ -155,14 +155,18 @@ public class BezierController : MonoBehaviour
             SetImageSprite(1, obj);//切换下一张图片
         }
 
-        //物体BezierT的值小于等于0 （到达最左边边）
+        ////物体BezierT的值小于等于0 （到达最左边）
+        //物体BezierT的值的小于等于0 （到达最右边）
         if (obj.BezierT <= 0)
         {
             //取除1的余数
             float newBezierT = obj.BezierT % 1;  
             //我们的贝塞尔T取值范围为0~1，不会出现负数 所以“取余的值”要为正，这里进行绝对值计算
             obj.BezierT = rightDis- Mathf.Abs(newBezierT);
-            SetImageSprite(-1, obj);//切换上一张图片
+
+
+            //TODO: FIX BUG 因为顺时针转，而且。。。所以不要切上一张图片
+            //SetImageSprite(-1, obj);//切换上一张图片
         }
 
         //计算在贝塞尔曲线的位置并赋值
@@ -204,6 +208,7 @@ public class BezierController : MonoBehaviour
 
         //修改item图片
         item.SetImage(spriteList[currentIndex]);
+        Debug.Log(dir + " " + item.name + " " + currentIndex);
 
     }
     #endregion

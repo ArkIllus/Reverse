@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class CarouselItem : MonoBehaviour
 {
-    float bezierT;
+    [SerializeField] float bezierT;
     //SpriteRenderer m_Img;
     Image m_Img;
 

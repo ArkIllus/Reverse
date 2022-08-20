@@ -1007,23 +1007,26 @@ namespace TarodevController
 
         #region Enchanting
         [Header("Enchant")]
-        public float enchant_Value;
+        public int enchant_Value;
         public bool is_Enchant;
         [SerializeField] private float enchant_Time;
+        [SerializeField] private float enchant_Time_Stay = 5f;
         [SerializeField] public bool enchant_hot;
         [SerializeField] public bool enchant_cold;
         private void Caculate_Enchanting()
         {
-
             if (!is_Enchant)
             {
                 if (enchant_Value != 0)
                 {
                     enchant_Time += Time.deltaTime;
-                    if (enchant_Time >= 10f)
+                    if (enchant_Time >= enchant_Time_Stay)
                     {
                         enchant_Value = 0;
                         enchant_Time = 0;
+                        //快速消除过热/过冷屏幕效果
+                        FreezePanel.Instance.QuickFade();
+                        OverheatPanel.Instance.QuickFade();
                     }
                 }
 
@@ -1032,13 +1035,13 @@ namespace TarodevController
             {
                 enchant_Time = 0;
             }
-            if (enchant_Value>= 100f || enchant_Value <= -100f)
+            if (enchant_Value>= 60 || enchant_Value <= -60)
             {
                 Die();
             }
 
-            enchant_hot = enchant_Value >= 10f ? true : false;
-            enchant_cold = enchant_Value <= -10f ? true : false;
+            enchant_hot = enchant_Value >= 10 ? true : false;
+            enchant_cold = enchant_Value <= -10 ? true : false;
             if (enchant_hot)
             {
                 material.EnableKeyword("OUTBASE_ON");
@@ -1055,8 +1058,18 @@ namespace TarodevController
                 material.DisableKeyword("OUTBASE_ON");
             }
 
-
-
+            //过冷、过热的屏幕效果
+            //附魔值40~60对应透明度0~185/255
+            if (enchant_Value > 40)
+            {
+                Debug.Log("OverheatPanel");
+                OverheatPanel.Instance.SetAlpha((enchant_Value-40) * 0.037f);
+            }
+            else if(enchant_Value < -40)
+            {
+                Debug.Log("FreezePanel");
+                FreezePanel.Instance.SetAlpha((-40 - enchant_Value) * 0.037f);
+            }
         }
 
 

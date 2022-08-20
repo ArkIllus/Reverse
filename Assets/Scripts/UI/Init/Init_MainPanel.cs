@@ -3,13 +3,29 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Init_MainPanel : BasePanel
 {
+    public Button btnContinue;
+    public VerticalLayoutGroup vlo;
+
     public override void ShowMe()
     {
         //base.ShowMe();
         this.gameObject.SetActive(true);
+
+        //读取上一次游玩的关卡记录，如果没有记录则不显示Continue按钮
+        if (GameManager_global.GetInstance().gameData_SO.lastLevel == -1)
+        {
+            btnContinue.gameObject.SetActive(false);
+            vlo.spacing = 60;
+        }
+        else
+        {
+            btnContinue.gameObject.SetActive(true);
+            vlo.spacing = 50;
+        }
     }
 
     public override void HideMe()
@@ -49,16 +65,17 @@ public class Init_MainPanel : BasePanel
 
         //TODO 场景转换过渡
         //进入第一章
+        GameManager_global.GetInstance().gameData_SO.lastLevel = 0;
         SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.Levels[0]);
     }
     public void ClickContinueGame()
     {
         Debug.Log("ClickContinueGame");
 
-        //clear关卡记录
-        GameManager_global.GetInstance().gameData_SO.ClearLevelRecords();
+        //不clear关卡记录
 
-        //TODO 继续游戏 切换场景
+        //继续上次关卡
+        SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.Levels[GameManager_global.GetInstance().gameData_SO.lastLevel]);
     }
     public void ClickSelectLevel()
     {

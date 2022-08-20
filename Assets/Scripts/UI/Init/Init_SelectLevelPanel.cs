@@ -16,6 +16,10 @@ public class Init_SelectLevelPanel : BasePanel
     public RectTransform rectTransform2;
     public RectTransform rectTransform3;
     public RectTransform rectTransformBack;
+
+    public List<Text> textList;
+    [SerializeField] private List<int> completeCakes = new List<int>(3);
+
     Vector3 tmpScaleBack;
 
     public BezierController bezierController;
@@ -24,6 +28,22 @@ public class Init_SelectLevelPanel : BasePanel
     {
         base.Awake();
         tmpScaleBack = rectTransformBack.localScale;
+
+        //更新蛋糕收集进度
+        GameData_SO gameData_SO = GameManager_global.GetInstance().gameData_SO;
+        int curCakes = 0;
+        for (int i = 0; i < gameData_SO.ach_5_Allcake.cakesGet.Count; i++)
+        {
+            if (gameData_SO.ach_5_Allcake.cakesGet[i] == true)
+            {
+                ++curCakes;
+                ++completeCakes[gameData_SO.ach_5_Allcake.cakes[i].level];
+            }
+        }
+        for (int i = 0; i < gameData_SO.levelRecords.Count; i++)
+        {
+            textList[i].text = curCakes.ToString() + "/" + completeCakes[i].ToString();
+        }
     }
 
     #region 动效
@@ -126,9 +146,12 @@ public class Init_SelectLevelPanel : BasePanel
     }
     public void ClickLevel(int levelIndex)
     {
+        Debug.Log("ClickLevel " + levelIndex);
+
+        GameManager_global.GetInstance().gameData_SO.lastLevel = levelIndex;
+
         //TODO 场景转换过渡
 
-        Debug.Log("ClickLevel " + levelIndex);
         //SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.Levels[levelIndex], () => {
         //    //TODO：加载完成后Unload所有的UI（会有一瞬间出现2个EventSystem，会报warning）  //[注]改到了新场景的UIManager_MonoProxy的OnEnable()中进行
         //    UIManager.GetInstance().UnloadAllUI();
