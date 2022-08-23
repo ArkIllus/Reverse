@@ -1,3 +1,4 @@
+#if UNITY_EDITOR //在打包时记得添加
 namespace Plugins._01_PrefabTileMap
 {
     public class E_ExampleTile : E_PrefabTile
@@ -5,3 +6,4 @@ namespace Plugins._01_PrefabTileMap
         
     }
 }
+#endif //在打包时记得添加

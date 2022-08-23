@@ -71,7 +71,6 @@ GameObject:
   - component: {fileID: 7275466636331475423}
   - component: {fileID: 7275466636331475422}
   - component: {fileID: 7275466636331475420}
-  - component: {fileID: -4779330375993247999}
   m_Layer: 6
   m_Name: Env_5_1
   m_TagString: Untagged
@@ -135,7 +134,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8804d04b3e827a14eb18f40ce9be36a5, type: 3}
-  m_Color: {r: 0.9622642, g: 0.9622642, b: 0.9622642, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -171,18 +170,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-4779330375993247999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275466636331475419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4bf1e8525d694f4cbb2b3ab12abe519, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  map: {fileID: 0}
-  gridPos: {x: 0, y: 0}
-  isTempHide: 0

@@ -10,15 +10,16 @@ public class MusicManager : BaseManager<MusicManager>
     public static string path_Sound = "Music/Sound/";
 
     //BGM
-    private AudioSource bgm = null;
+    //private AudioSource bgm = null;
+    public AudioSource bgm = null;
     private float bgmVolume = 1;
 
-    //其他所有音效
+    //其他所有音效 Sound
     //[注]目前音效都挂在一个soundObj下，而不是发出声音的GameObject下，
     //没有距离区分，不适合3D游戏
     private GameObject soundObj = null;
     private List<AudioSource> soundList = new List<AudioSource>();
-    private float soundVolume = 1;
+    private float soundVolume = 0.3f; //sound音量太大了
 
     public MusicManager()
     {
@@ -32,9 +33,14 @@ public class MusicManager : BaseManager<MusicManager>
     {
         for(int i = soundList.Count - 1; i >= 0; --i)
         {
+            if (soundList[i] == null) // ?????
+            {
+                soundList.Clear();
+                return;
+            }
             if (!soundList[i].isPlaying)
             {
-                GameObject.Destroy(soundList[i]);
+                GameObject.Destroy(soundList[i]); //TODO: 优化 但有的音效确实需要同时播放多个...
                 soundList.RemoveAt(i);
             }
         }
@@ -51,6 +57,11 @@ public class MusicManager : BaseManager<MusicManager>
             GameObject obj = new GameObject();
             obj.name = "BGM";
             bgm = obj.AddComponent<AudioSource>();
+            GameObject.DontDestroyOnLoad(obj); //重要! 死亡不重置
+        }
+        if (bgm.isPlaying && bgm.clip.name == name) //如果播放同一个音乐，不重新从头播放
+        {
+            return;
         }
         //异步加载BGM，加载完成后 播放
         ResourceManager.GetInstance().LoadAsync<AudioClip>(path_BGM + name, (clip) =>
@@ -60,6 +71,58 @@ public class MusicManager : BaseManager<MusicManager>
             bgm.loop = true; //默认循环播放
             bgm.Play();
         });
+    }
+    //临时做法
+
+    public void PlayBGM2(string name)
+    {
+        if (bgm == null)
+        {
+            GameObject obj = new GameObject();
+            obj.name = "BGM";
+            bgm = obj.AddComponent<AudioSource>();
+            GameObject.DontDestroyOnLoad(obj); //重要! 死亡不重置
+        }
+        if (bgm.isPlaying && 
+            (bgm.clip.name == "Zero Lives OST WIP 5" ||
+            bgm.clip.name == "End Room" || 
+            bgm.clip.name == name)) //如果在播放这三首音乐
+        {
+            return;
+        }
+        //异步加载BGM，加载完成后 播放
+        ResourceManager.GetInstance().LoadAsync<AudioClip>(path_BGM + name, (clip) =>
+        {
+            bgm.clip = clip;
+            bgm.volume = bgmVolume;
+            bgm.loop = true; //默认循环播放
+            bgm.Play();
+        });
+    }
+    public void PlayBGM(string name, UnityAction action)
+    {
+        if (bgm == null)
+        {
+            GameObject obj = new GameObject();
+            obj.name = "BGM";
+            bgm = obj.AddComponent<AudioSource>();
+        }
+        //异步加载BGM，加载完成后 播放
+        ResourceManager.GetInstance().LoadAsync<AudioClip>(path_BGM + name, (clip) =>
+        {
+            bgm.clip = clip;
+            bgm.volume = bgmVolume;
+            bgm.loop = true; //默认循环播放
+            bgm.Play();
+            action(); //!!!!
+        });
+    }
+    //临时做法
+    public void PlayBGM_2(string name)
+    {
+        bgm.volume = bgmVolume;
+        bgm.loop = true; //默认循环播放
+        bgm.Play();
     }
     /// <summary>
     /// 暂停背景音乐
@@ -109,7 +172,7 @@ public class MusicManager : BaseManager<MusicManager>
             AudioSource sound = soundObj.AddComponent<AudioSource>();
             sound.clip = clip;
             sound.loop = isLoop; //默认不循环播放
-            sound.volume = bgmVolume;
+            sound.volume = soundVolume;
             sound.Play();
             soundList.Add(sound);
 

@@ -1,3 +1,5 @@
+#if UNITY_EDITOR //在打包时记得添加
+
 //using TinyCeleste._03_Editor;
 using UnityEditor;
 using UnityEngine;
@@ -143,3 +145,4 @@ namespace Plugins._01_PrefabTileMap._02_PrefabPaletteWindow
         }
     }
 }
+#endif //在打包时记得添加

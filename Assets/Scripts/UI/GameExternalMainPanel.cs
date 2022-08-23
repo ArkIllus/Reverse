@@ -27,6 +27,7 @@ public class GameExternalMainPanel : BasePanel
     //用于自动注册按钮onClick事件
     protected override void OnClick(string btnName)
     {
+        base.OnClick(btnName);
         switch (btnName) 
         {
             case buttonNewGame:

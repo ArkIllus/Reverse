@@ -80,6 +80,8 @@ public class Init_BgPicPanel : BasePanel
         Debug.Log("ShowTitle");
         SetImage_effectMat();
         imageGameTitle.gameObject.SetActive(true);
+        imageBackground.color = new Color(imageBackground.color.r, imageBackground.color.g, imageBackground.color.b, 0);
+        imageGameTitle.color = new Color(imageGameTitle.color.r, imageGameTitle.color.g, imageGameTitle.color.b, 0);
         imageBackground.DOFade(1, fadeTime);
         imageGameTitle.DOFade(1, fadeTime);
         Tweener tmp = imageBackground2.DOFade(0, fadeTime);

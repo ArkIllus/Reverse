@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+//using UnityEngine.Events;
+using System;
 
 public class Init_RegisterPanel : BasePanel
 {
@@ -36,6 +38,19 @@ public class Init_RegisterPanel : BasePanel
         //²¢ÇÒSetActive(false)
         tmp.onComplete += () => { this.gameObject.SetActive(false); };
     }
+    public void PanelFadeOut(Action fun)
+    {
+        canvasGroup.alpha = 1f;
+        rectTransform.transform.localPosition = new Vector3(0f, 0f, 0f);
+        rectTransform.DOAnchorPos(new Vector2(0f, -1000f), fadeOutTime, false).SetEase(Ease.InOutQuint);
+        Tweener tmp = canvasGroup.DOFade(0, fadeOutTime);
+
+        //²¢ÇÒSetActive(false)
+        tmp.onComplete += () => { 
+            this.gameObject.SetActive(false); 
+            fun();
+        };
+    }
     #endregion
 
     private void OnEnable()
@@ -53,6 +68,10 @@ public class Init_RegisterPanel : BasePanel
     {
         PanelFadeOut();
     }
+    public void HideMe(Action fun)
+    {
+        PanelFadeOut(fun);
+    }
     public override void ShowMe_noEffect()
     {
         Debug.Log("Init_RegisterPanel   ShowMe_noEffect");
@@ -68,6 +87,7 @@ public class Init_RegisterPanel : BasePanel
 
     protected override void OnClick(string btnName)
     {
+        base.OnClick(btnName);
         switch (btnName)
         {
             case "ButtonRegisterAndLogin":
@@ -163,7 +183,7 @@ public class Init_RegisterPanel : BasePanel
     }
     public void ShowTip_format()
     {
-        textTip.text = "Password format error";
+        textTip.text = "Password format error(6~20digit+letter)";
         textTip.gameObject.SetActive(true);
     }
     public void ShowTip_diff()

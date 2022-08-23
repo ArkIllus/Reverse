@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class ImageCustomCollideerRect : Image
 {
     private CircleCollider2D collider2d;
-    void Start()
+    protected override void Start()
     {
         collider2d = GetComponent<CircleCollider2D>();
     }

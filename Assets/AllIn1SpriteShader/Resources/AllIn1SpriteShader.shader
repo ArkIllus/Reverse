@@ -248,7 +248,7 @@
             #pragma fragment frag
 
 			#pragma shader_feature GLOW_ON
-			#pragma shader_feature FADE_ON
+			#pragma multi_compile _ FADE_ON
 			#pragma shader_feature OUTBASE_ON
 			#pragma shader_feature ONLYOUTLINE_ON
 			#pragma shader_feature GRADIENT_ON
@@ -269,7 +269,7 @@
 			#pragma shader_feature BLUR_ON
 			#pragma shader_feature MOTIONBLUR_ON
 			#pragma shader_feature GHOST_ON
-			#pragma shader_feature ALPHAOUTLINE_ON
+			#pragma multi_compile _ ALPHAOUTLINE_ON
 			#pragma shader_feature INNEROUTLINE_ON
 			#pragma shader_feature ONLYINNEROUTLINE_ON
 			#pragma shader_feature HOLOGRAM_ON
@@ -301,8 +301,8 @@
 			#pragma shader_feature SHAKEUV_ON
 
 			#pragma shader_feature GLOWTEX_ON
-			#pragma shader_feature OUTTEX_ON
-			#pragma shader_feature OUTDIST_ON
+			#pragma multi_compile _ OUTTEX_ON
+			#pragma multi_compile _ OUTDIST_ON
 			#pragma shader_feature OUTBASE8DIR_ON
 			#pragma shader_feature OUTBASEPIXELPERF_ON
 			#pragma shader_feature COLORRAMPOUTLINE_ON
@@ -310,7 +310,7 @@
 			#pragma shader_feature POSTERIZEOUTLINE_ON
 			#pragma shader_feature BLURISHD_ON
 			#pragma shader_feature MANUALWIND_ON
-			#pragma shader_feature ATLAS_ON
+			#pragma multi_compile _ ATLAS_ON
 			#pragma shader_feature PREMULTIPLYALPHA_ON
 
 			#pragma shader_feature BILBOARD_ON

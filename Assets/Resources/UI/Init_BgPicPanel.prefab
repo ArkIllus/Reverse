@@ -245,4 +245,6 @@ MonoBehaviour:
   imageBackground2: {fileID: 397063446794431720}
   normalMat: {fileID: 0}
   effectMat: {fileID: 2100000, guid: 2fbce786af5b0e64fb71c6d3b47a37f4, type: 2}
+  btnStart: {fileID: 0}
+  imageBtnStart: {fileID: 0}
   fadeTime: 0.8

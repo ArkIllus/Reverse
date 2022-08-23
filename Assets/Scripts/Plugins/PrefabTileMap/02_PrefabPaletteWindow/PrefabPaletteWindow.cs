@@ -1,3 +1,5 @@
+#if UNITY_EDITOR //在打包时记得添加
+
 using System.Collections.Generic;
 //using TinyCeleste._03_Editor;
 using Plugins._01_PrefabTileMap._01_Brush;
@@ -7,6 +9,7 @@ using UnityEngine;
 
 namespace Plugins._01_PrefabTileMap._02_PrefabPaletteWindow
 {
+    
     /// <summary>
     /// 调色板编辑窗口
     /// 为单例
@@ -125,3 +128,4 @@ namespace Plugins._01_PrefabTileMap._02_PrefabPaletteWindow
         }
     }
 }
+#endif //在打包时记得添加

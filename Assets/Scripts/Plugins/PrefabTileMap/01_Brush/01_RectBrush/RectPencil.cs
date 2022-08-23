@@ -1,3 +1,4 @@
+#if UNITY_EDITOR//在打包时记得添加
 using TinyCeleste._04_Extension._02_Unity;
 using UnityEngine;
 
@@ -200,3 +201,4 @@ namespace Plugins._01_PrefabTileMap._01_Brush._01_RectBrush
         }
     }
 }
+#endif

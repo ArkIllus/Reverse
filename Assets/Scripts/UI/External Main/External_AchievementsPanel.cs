@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class External_AchievementsPanel : BasePanel
 {
+    public List<Image> images;
+
     public float fadeInTime = 0.3f;
     public float fadeOutTime = 0.2f;
     public CanvasGroup canvasGroup;
@@ -17,6 +19,26 @@ public class External_AchievementsPanel : BasePanel
     {
         base.Awake();
         originScale = rectTransform.localScale;
+
+        //更新成就解锁进度
+        GameData_SO gameData_SO = GameManager_global.GetInstance().gameData_SO;
+        ShowAch(gameData_SO.ach_1_Firstmeet, 0);
+        ShowAch(gameData_SO.ach_2_Overload, 1);
+        ShowAch(gameData_SO.ach_3_Pass, 3);
+        ShowAch(gameData_SO.ach_4_Firstcake, 2);
+        ShowAch(gameData_SO.ach_5_Allcake, 5);
+        ShowAch(gameData_SO.ach_6_FirstEnchant, 4);
+    }
+    public void ShowAch(Achievement_SO achievement_SO, int index)
+    {
+        if (achievement_SO.isComplete)
+        {
+            images[index].color = Color.white;
+        }
+        else
+        {
+            images[index].color = Color.gray;
+        }
     }
 
     #region 动效

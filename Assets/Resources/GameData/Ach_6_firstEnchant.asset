@@ -15,3 +15,5 @@ MonoBehaviour:
   currentAmount: 0
   completeAmount: 1
   isComplete: 0
+  acName: "\u5408\u7406\u8FD0\u7528"
+  acIndex: 5

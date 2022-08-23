@@ -22,15 +22,6 @@ public class DialogueManager : Singleton<DialogueManager>
 
     protected override void Awake()
     {
-        //if (instance != null)
-        //{
-        //    Destroy(this.gameObject);
-        //}
-        //else
-        //{
-        //    instance = this as DialogueManager;
-        //    DontDestroyOnLoad(this.gameObject); //optional
-        //}
         base.Awake();
 
         if (dialogueLines != null)
@@ -42,7 +33,7 @@ public class DialogueManager : Singleton<DialogueManager>
         if (!dialogueBox.activeInHierarchy || isScrolling)
                 return;
 
-        if (Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonUp(0))
+        if (Input.GetKeyDown(KeyCode.V) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonUp(0))
         //if (Input.GetMouseButtonUp(0))
         {
             currntLine++;

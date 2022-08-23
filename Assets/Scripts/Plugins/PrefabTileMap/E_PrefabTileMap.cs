@@ -1,3 +1,5 @@
+#if UNITY_EDITOR //在打包时记得添加
+
 using System;
 //using Boo.Lang;
 using TinyCeleste._04_Extension._01_UnityComponent;
@@ -161,3 +163,4 @@ namespace Plugins._01_PrefabTileMap
         }
     }
 }
+#endif //在打包时记得添加

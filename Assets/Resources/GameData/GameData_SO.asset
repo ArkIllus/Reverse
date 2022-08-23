@@ -21,18 +21,15 @@ MonoBehaviour:
   - sceneName: Level1
     rebirth_pos: {x: 0, y: 0, z: 0}
     rebirth_Reverse: 0
-    cake: 0
-    cake_t: 3
+    isPass: 0
   - sceneName: Level2
     rebirth_pos: {x: 0, y: 0, z: 0}
     rebirth_Reverse: 0
-    cake: 0
-    cake_t: 3
+    isPass: 0
   - sceneName: Level3
     rebirth_pos: {x: 0, y: 0, z: 0}
     rebirth_Reverse: 0
-    cake: 0
-    cake_t: 3
+    isPass: 0
   lastLevel: -1
   ach_1_Firstmeet: {fileID: 11400000, guid: 5965b44428df4ed42b870258ced94b22, type: 2}
   ach_2_Overload: {fileID: 11400000, guid: 6099ba08d75ba824fa21073f2c82f211, type: 2}
@@ -40,3 +37,4 @@ MonoBehaviour:
   ach_4_Firstcake: {fileID: 11400000, guid: ff5358893a2d4fa4a811bd192f8590a1, type: 2}
   ach_5_Allcake: {fileID: 11400000, guid: 47e1106c4a9d9244d82cdfcec3d2639a, type: 2}
   ach_6_FirstEnchant: {fileID: 11400000, guid: 3a5418e5fcfd63440949a582ea441d86, type: 2}
+  gainReverse: 0

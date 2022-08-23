@@ -16,6 +16,7 @@ public class TcpClient
     public BaseUserData udata;
     public AchievementData adata;
     public UserFriends ufriends;
+    public HurdleData hdata;
     /*
     ManualResetEvent udataevent = new ManualResetEvent(false);
     ManualResetEvent adataevent = new ManualResetEvent(false);
@@ -110,12 +111,21 @@ public class TcpClient
                     case 2013:
                         EventsMap[1013].Set();
                         break;
+                    case 2014:
+                        hdata = TcpMessage.DecodeHurdleData(cm.BytesData.ToByteArray());
+                        EventsMap[1014].Set();
+                        break;
+                    case 2015:
+                        EventsMap[1015].Set();
+                        break;
                     case 1011:
                         Debug.Log("该更新好友申请了");
                         break;
                     case 1012:
                         Debug.Log("该更新好友列表了");
                         break;
+                    
+
                     case 3002:
                         Debug.Log("账户在另一处登录");
                         Close();
@@ -133,7 +143,7 @@ public class TcpClient
     
     public BaseUserData GetUserData(int uid)
     {
-        _socket.Send(TcpMessage.EncodeCommunicationMessage(1003, TcpMessage.EncodeUpdataUserDataMessage(uid, TcpMessage.EncodeBaseUserData("", -1, -1, ""))));
+        _socket.Send(TcpMessage.EncodeCommunicationMessage(1003, TcpMessage.EncodeUpdateUserDataMessage(uid, TcpMessage.EncodeBaseUserData("", -1, -1, ""))));
         EventsMap[1003].WaitOne();
         Debug.Log(udata.Username);
         EventsMap[1003].Reset();
@@ -142,23 +152,23 @@ public class TcpClient
 
     public void UpdateUserData(int uid, string username, int profid, string bio)
     {
-        _socket.Send(TcpMessage.EncodeCommunicationMessage(1004, TcpMessage.EncodeUpdataUserDataMessage(uid, TcpMessage.EncodeBaseUserData(username, -1, profid, bio))));
+        _socket.Send(TcpMessage.EncodeCommunicationMessage(1004, TcpMessage.EncodeUpdateUserDataMessage(uid, TcpMessage.EncodeBaseUserData(username, -1, profid, bio))));
         EventsMap[1004].WaitOne();
         EventsMap[1004].Reset();
     }
 
     public AchievementData GetAchievementData(int uid)
     {
-        _socket.Send(TcpMessage.EncodeCommunicationMessage(1005, TcpMessage.EncodeUpdataUserDataMessage(uid, TcpMessage.EncodeAchievementData(-1))));
+        _socket.Send(TcpMessage.EncodeCommunicationMessage(1005, TcpMessage.EncodeUpdateUserDataMessage(uid, TcpMessage.EncodeAchievementData(-1,-1,-1,-1,-1))));
         EventsMap[1005].WaitOne();
-        Debug.Log(adata.Score);
+        Debug.Log(adata.FirstMagic);
         EventsMap[1005].Reset();
         return adata;
     }
 
-    public void UpdataAchievementData(int uid, int score)
+    public void UpdateAchievementData(int uid, int firstmeet, int overload, int pass, int cake, int firstmagic)
     {
-        _socket.Send(TcpMessage.EncodeCommunicationMessage(1006, TcpMessage.EncodeUpdataUserDataMessage(uid, TcpMessage.EncodeAchievementData(score))));
+        _socket.Send(TcpMessage.EncodeCommunicationMessage(1006, TcpMessage.EncodeUpdateUserDataMessage(uid, TcpMessage.EncodeAchievementData(firstmeet,overload,pass,cake,firstmagic))));
         EventsMap[1006].WaitOne();
         EventsMap[1006].Reset();
     }
@@ -200,4 +210,19 @@ public class TcpClient
         EventsMap[1013].Reset();
     }
     
+    public HurdleData GetHurdleData(int uid)
+    {
+        _socket.Send(TcpMessage.EncodeCommunicationMessage(1014, TcpMessage.EncodeUpdateUserDataMessage(uid, TcpMessage.EncodeHurdleData(TcpMessage.InitOneHurdleData(), TcpMessage.InitOneHurdleData(), TcpMessage.InitOneHurdleData()))));
+        EventsMap[1014].WaitOne();
+        Debug.Log(hdata);
+        EventsMap[1014].Reset();
+        return hdata;
+    }
+
+    public void UpdateHurdleData(int uid, OneHurdleData level1, OneHurdleData level2, OneHurdleData level3)
+    {
+        _socket.Send(TcpMessage.EncodeCommunicationMessage(1015, TcpMessage.EncodeUpdateUserDataMessage(uid, TcpMessage.EncodeHurdleData(level1, level2, level3))));
+        EventsMap[1015].WaitOne();
+        EventsMap[1015].Reset();
+    }
 }

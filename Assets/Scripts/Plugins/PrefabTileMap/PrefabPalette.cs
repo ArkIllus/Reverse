@@ -1,3 +1,5 @@
+#if UNITY_EDITOR //在打包时记得添加
+
 using System.Collections.Generic;
 using TinyCeleste._05_MyTool._03_WinExplorer;
 using UnityEditor;
@@ -40,3 +42,4 @@ namespace Plugins._01_PrefabTileMap
         }
     }
 }
+#endif //在打包时记得添加

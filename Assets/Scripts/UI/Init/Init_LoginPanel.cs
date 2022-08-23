@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+//using UnityEngine.Events;
+using System;
 
 public class Init_LoginPanel : BasePanel
 {
@@ -52,6 +54,19 @@ public class Init_LoginPanel : BasePanel
             UIManager.GetInstance().ShowPanel<Init_1stPanel>(str_Init1stPanel, E_UI_Layer.Mid);
         };
     }
+    public void PanelFadeOut(Action fun)
+    {
+        canvasGroup.alpha = 1f;
+        rectTransform.transform.localPosition = new Vector3(0f, 0f, 0f);
+        rectTransform.DOAnchorPos(new Vector2(0f, -1000f), fadeOutTime, false).SetEase(Ease.InOutQuint);
+        Tweener tmp = canvasGroup.DOFade(0, fadeOutTime);
+
+        //²¢ÇÒSetActive(false)
+        tmp.onComplete += () => {
+            this.gameObject.SetActive(false);
+            fun(); //!!!
+        };
+    }
     #endregion
 
     private void OnEnable()
@@ -69,6 +84,10 @@ public class Init_LoginPanel : BasePanel
     {
         PanelFadeOut();
     }
+    public void HideMe(Action fun)
+    {
+        PanelFadeOut(fun);
+    }
     public void HideMe_AndShowInit1stPanel()
     {
         PanelFadeOut_AndShowInit1stPanel();
@@ -85,6 +104,7 @@ public class Init_LoginPanel : BasePanel
 
     protected override void OnClick(string btnName)
     {
+        base.OnClick(btnName);
         switch (btnName)
         {
             case "ButtonLogin":
@@ -167,7 +187,7 @@ public class Init_LoginPanel : BasePanel
     
     public void ShowTip_format()
     {
-        textTip.text = "Password format error";
+        textTip.text = "Password format error(6~20digit+letter)";
         textTip.gameObject.SetActive(true);
     }
     public void ShowTip_error()

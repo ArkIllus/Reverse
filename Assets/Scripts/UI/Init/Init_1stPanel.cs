@@ -71,6 +71,7 @@ public class Init_1stPanel : BasePanel
     }
     protected override void OnClick(string btnName)
     {
+        base.OnClick(btnName);
         switch (btnName)
         {
             case "ButtonStart":

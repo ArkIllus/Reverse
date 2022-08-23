@@ -1,3 +1,4 @@
+#if UNITY_EDITOR //在打包时记得添加
 using UnityEditor;
 
 namespace Plugins._01_PrefabTileMap._02_PrefabPaletteWindow
@@ -33,3 +34,4 @@ namespace Plugins._01_PrefabTileMap._02_PrefabPaletteWindow
         }
     }
 }
+#endif //在打包时记得添加

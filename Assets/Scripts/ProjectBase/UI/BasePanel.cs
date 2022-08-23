@@ -49,7 +49,7 @@ public class BasePanel : MonoBehaviour
     //用于自动注册按钮onClick事件
     protected virtual void OnClick(string btnName)
     {
-
+        AllSceneMusicManager.Instance.PlaySound("button_down");
     }
     //用于自动注册Toggle的onValueChanged事件
     protected virtual void OnValueChanged_toggle(string toggleName, bool value)

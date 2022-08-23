@@ -10,6 +10,7 @@ public class QuitPanel : BasePanel
         this.gameObject.SetActive(true);
         //暂停
         Time.timeScale = 0f;
+        GameManager.Instance.player.isPaused = true;
     }
 
     public override void HideMe()
@@ -17,10 +18,13 @@ public class QuitPanel : BasePanel
         this.gameObject.SetActive(false);
         //取消暂停
         Time.timeScale = 1f;
+        GameManager.Instance.player.isPaused = false;
     }
 
     protected override void OnClick(string btnName)
     {
+        Debug.Log("OnClick");
+        base.OnClick(btnName);
         switch (btnName)
         {
             case "ButtonQuit":
@@ -37,6 +41,8 @@ public class QuitPanel : BasePanel
         Debug.Log("ClickQuit");
         //取消暂停
         Time.timeScale = 1f;
+        MusicManager.GetInstance().StopBGM();
+        //GameManager.Instance.player.isPaused = false;
         //SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.InitScene);
         SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.AfterLoginScene);
     }

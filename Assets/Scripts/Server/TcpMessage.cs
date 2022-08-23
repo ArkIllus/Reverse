@@ -13,7 +13,7 @@ public class TcpMessage : MonoBehaviour
     {
         CommunicationMessage cm = new CommunicationMessage(){
             MessageId = messageid,
-            BytesData = Google.Protobuf.ByteString.CopyFrom(buf), //
+            BytesData = Google.Protobuf.ByteString.CopyFrom(buf),
         };
         return cm.ToByteArray();
     }
@@ -25,7 +25,7 @@ public class TcpMessage : MonoBehaviour
             Password = password,
             Uid = uid,
         };
-        return useraccount.ToByteArray(); //
+        return useraccount.ToByteArray();
     }
     
     public static byte[] EncodeBaseUserData(string username, int nameid, int profid, string bio)
@@ -39,7 +39,7 @@ public class TcpMessage : MonoBehaviour
         return udata.ToByteArray();
     }
 
-    public static byte[] EncodeUpdataUserDataMessage(int uid, byte[] buf)
+    public static byte[] EncodeUpdateUserDataMessage(int uid, byte[] buf)
     {
         UpdateUserDataMessage upmsg = new UpdateUserDataMessage(){
             Uid = uid,
@@ -48,10 +48,14 @@ public class TcpMessage : MonoBehaviour
         return upmsg.ToByteArray();
     }
 
-    public static byte[] EncodeAchievementData(int score)
+    public static byte[] EncodeAchievementData(int firstmeet, int overload, int pass, int cake, int firstmagic)
     {
         AchievementData adata = new AchievementData(){
-            Score = score,
+            FirstMeet = firstmeet,
+            Overload = overload,
+            Pass = pass,
+            Cake = cake,
+            FirstMagic = firstmagic,
         };
         return adata.ToByteArray();
     }
@@ -63,6 +67,27 @@ public class TcpMessage : MonoBehaviour
             GoalUid = goaluid,
         };
         return freq.ToByteArray();
+    }
+
+    public static OneHurdleData InitOneHurdleData(float x = 0, float y = 0, float z = 0, bool reverse = false, int passtime = -1)
+    {
+        OneHurdleData odata = new OneHurdleData(){
+            X = x,
+            Y = y,
+            Z = z,
+            Reverse = reverse,
+            PassTime = passtime,
+        };
+        return odata;
+    }
+
+    public static byte[] EncodeHurdleData(OneHurdleData level1, OneHurdleData level2, OneHurdleData level3)
+    {
+        HurdleData hdata = new HurdleData();
+        hdata.Hurdle.Add(level1);
+        hdata.Hurdle.Add(level2);
+        hdata.Hurdle.Add(level3);
+        return hdata.ToByteArray();
     }
 
     public static CommunicationMessage DecodeCommunicationMessage(byte[] buf, int len)
@@ -102,4 +127,18 @@ public class TcpMessage : MonoBehaviour
         ufriends.MergeFrom(buf);
         return ufriends;
     }
+
+    public static HurdleData DecodeHurdleData(byte[] buf)
+    {
+        HurdleData hdata = new HurdleData();
+        hdata.MergeFrom(buf);
+        return hdata;
+    }
+    //var x = hdata.Hurdle[0].X;
+    //public static OneHurdleData DecodeOneHurdleData(byte[] buf)
+    //{
+    //    OneHurdleData hdata = new OneHurdleData();
+    //    hdata.MergeFrom(buf);
+    //    return hdata;
+    //}
 }

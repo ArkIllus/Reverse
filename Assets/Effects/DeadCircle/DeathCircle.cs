@@ -61,6 +61,22 @@ public class DeathCircle : MonoBehaviour
         yield return new WaitForSeconds(durationOutToIn); //TODO优化
         //isPlaying = false;
     }
+
+    public IEnumerator PlayCircleOutToIn(float _durationOutToIn)
+    {
+        Debug.Log("PlayCircleOutToIn");
+
+        circle.isActive.SetValue(new BoolParameter(true));
+        //circle.Center.SetValue(new Vector2Parameter(Camera.main.WorldToViewportPoint(transform.position)));//0~1
+        circle.Center.SetValue(new Vector2Parameter(Camera.main.WorldToScreenPoint(transform.position))); //1920 1080
+
+        //isPlaying = true;
+        circle.Radius.SetValue(new FloatParameter(maxRadius));
+        DOTween.To(() => circle.Radius.value, x => circle.Radius.value = x, minRadius, _durationOutToIn);
+        yield return new WaitForSeconds(_durationOutToIn); //TODO优化
+        //isPlaying = false;
+    }
+
     public IEnumerator PlayCircleInToOut()
     {
         Debug.Log("PlayCircleInToOut");
@@ -81,6 +97,18 @@ public class DeathCircle : MonoBehaviour
 
     public void SetCircleMin()
     {
+        if (circle == null) //临时办法：防止为空
+        {
+            volume = GameManager.Instance.volume;
+            ////[注]：不再需要放在第一个
+            for (int i = 0; i < volume.profile.components.Count; ++i)
+            {
+                if (volume.profile.components[i].GetType() == typeof(CircleVolumeComponent))
+                {
+                    circle = volume.profile.components[i] as CircleVolumeComponent;
+                }
+            }
+        }
         circle.Radius.SetValue(new FloatParameter(0));
     }
 }

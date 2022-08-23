@@ -1,3 +1,4 @@
+#if UNITY_EDITOR //在打包时记得添加
 namespace Plugins._01_PrefabTileMap._02_PrefabPaletteWindow
 {
     public partial class PrefabPaletteWindow
@@ -13,3 +14,4 @@ namespace Plugins._01_PrefabTileMap._02_PrefabPaletteWindow
         }
     }
 }
+#endif //在打包时记得添加

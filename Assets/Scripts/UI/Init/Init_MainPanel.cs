@@ -36,6 +36,7 @@ public class Init_MainPanel : BasePanel
 
     protected override void OnClick(string btnName)
     {
+        base.OnClick(btnName);
         switch (btnName)
         {
             case "ButtonNewGame":
@@ -61,7 +62,7 @@ public class Init_MainPanel : BasePanel
         Debug.Log("ClickNewGame");
 
         //clear关卡记录
-        GameManager_global.GetInstance().gameData_SO.ClearLevelRecords();
+        GameManager_global.GetInstance().gameData_SO.ClearLevelRecordsAndReverseAbility();
 
         //TODO 场景转换过渡
         //进入第一章
@@ -81,8 +82,8 @@ public class Init_MainPanel : BasePanel
     {
         Debug.Log("ClickSelectLevel");
 
-        //clear关卡记录
-        GameManager_global.GetInstance().gameData_SO.ClearLevelRecords();
+        //稍后再clear关卡记录
+        //GameManager_global.GetInstance().gameData_SO.ClearLevelRecords();
 
         //直接隐藏此panel
         HideMe();
@@ -110,19 +111,26 @@ public class Init_MainPanel : BasePanel
     {
         Debug.Log("ClickQuit");
 
-        if (SceneManager.GetActiveScene().name == GameData_SO.InitScene)
-        {
-            //直接隐藏此panel
-            HideMe();
+        ////tcp断开连接
+        //GameManager_global.GetInstance().gameData_SO.CloseTcpConnect();
 
-            UIManager.GetInstance().ShowPanel<Init_1stPanel>("Init_1stPanel", E_UI_Layer.Mid);
+        //if (SceneManager.GetActiveScene().name == GameData_SO.InitScene)
+        //{
+        //    //直接隐藏此panel
+        //    HideMe();
 
-            //显示标题
-            UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
-        }
-        else if(SceneManager.GetActiveScene().name == GameData_SO.AfterLoginScene)
-        {
-            SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.InitScene);
-        }
+        //    UIManager.GetInstance().ShowPanel<Init_1stPanel>("Init_1stPanel", E_UI_Layer.Mid);
+
+        //    //显示标题
+        //    UIManager.GetInstance().GetPanel<Init_BgPicPanel>("Init_BgPicPanel").ShowTitle();
+
+        //    //切换BGM
+        //    AllSceneMusicManager.Instance.PlayBGM("Mantra");
+        //}
+        //else if(SceneManager.GetActiveScene().name == GameData_SO.AfterLoginScene)
+        //{
+        //    SceneMgr.GetInstance().LoadSceneAsync(GameData_SO.InitScene);
+        //}
+        Application.Quit();
     }
 }

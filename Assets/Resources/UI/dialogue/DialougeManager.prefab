@@ -47,10 +47,11 @@ MonoBehaviour:
   dialogueText: {fileID: 0}
   nameText: {fileID: 0}
   characterImage: {fileID: 0}
-  textWaitTime: 0.02
+  textWaitTime: 0.01
   dialogueLines:
   - aa
   - bbb
   currentTalkable: {fileID: 0}
   currntLine: 0
   isScrolling: 0
+  justEnd: 0

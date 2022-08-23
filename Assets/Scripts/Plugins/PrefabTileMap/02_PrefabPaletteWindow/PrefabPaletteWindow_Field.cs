@@ -1,3 +1,5 @@
+#if UNITY_EDITOR //在打包时记得添加
+
 using System.Collections.Generic;
 using Plugins._01_PrefabTileMap._01_Brush;
 using UnityEngine;
@@ -92,3 +94,4 @@ namespace Plugins._01_PrefabTileMap._02_PrefabPaletteWindow
         public bool isMouseDowning;
     }
 }
+#endif //在打包时记得添加

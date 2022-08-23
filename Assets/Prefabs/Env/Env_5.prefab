@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 7275466636331475423}
   - component: {fileID: 7275466636331475422}
   - component: {fileID: 7275466636331475420}
-  - component: {fileID: 6473631861280806443}
+  - component: {fileID: 6041751992420334705}
   m_Layer: 6
   m_Name: Env_5
   m_TagString: Untagged
@@ -113,7 +113,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3ef0e1b1c6254d24aaffabe46bbc8021, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -135,7 +135,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8804d04b3e827a14eb18f40ce9be36a5, type: 3}
-  m_Color: {r: 1, g: 0.90310204, b: 0, a: 1}
+  m_Color: {r: 0.9793825, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -171,7 +171,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &6473631861280806443
+--- !u!114 &6041751992420334705
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,9 +180,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7275466636331475419}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4bf1e8525d694f4cbb2b3ab12abe519, type: 3}
+  m_Script: {fileID: 11500000, guid: ee158225ee1e59f4791627785501d950, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  map: {fileID: 0}
-  gridPos: {x: 0, y: 0}
-  isTempHide: 0
+  shaderTypes: 4
+  normalStrength: 5
+  normalSmoothing: 1
+  computingNormal: 0

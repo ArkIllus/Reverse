@@ -6,6 +6,10 @@ using DG.Tweening;
 
 public class External_VisitingCardPanel : BasePanel
 {
+    public List<Text> textList;
+    [SerializeField] private List<int> completeCakes = new List<int>(3);
+    [SerializeField] private List<int> curCakes = new List<int>(3);
+
     public Text textUID;
     public Text textUsername;
 
@@ -20,6 +24,21 @@ public class External_VisitingCardPanel : BasePanel
     {
         base.Awake();
         originScale = rectTransform.localScale;
+
+        //更新每一关的蛋糕收集进度
+        GameData_SO gameData_SO = GameManager_global.GetInstance().gameData_SO;
+        for (int i = 0; i < gameData_SO.ach_5_Allcake.cakesGet.Count; i++)
+        {
+            ++completeCakes[gameData_SO.ach_5_Allcake.cakes[i].level];
+            if (gameData_SO.ach_5_Allcake.cakesGet[i] == true)
+            {
+                ++curCakes[gameData_SO.ach_5_Allcake.cakes[i].level];
+            }
+        }
+        for (int i = 0; i < gameData_SO.levelRecords.Count; i++)
+        {
+            textList[i].text = curCakes[i].ToString() + "/" + completeCakes[i].ToString();
+        }
     }
 
     #region 动效

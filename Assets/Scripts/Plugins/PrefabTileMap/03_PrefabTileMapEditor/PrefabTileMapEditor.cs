@@ -1,3 +1,5 @@
+#if UNITY_EDITOR //在打包时记得添加
+
 using UnityEditor;
 
 namespace Plugins._01_PrefabTileMap._03_PrefabTileMapEditor
@@ -10,3 +12,5 @@ namespace Plugins._01_PrefabTileMap._03_PrefabTileMapEditor
         
     }
 }
+
+#endif //在打包时记得添加

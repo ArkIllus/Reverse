@@ -55,5 +55,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Right Sharp Point (M) Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3719760065331936609, guid: 5efae242c22d7894bb0cc52abc4b2c96, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5efae242c22d7894bb0cc52abc4b2c96, type: 3}

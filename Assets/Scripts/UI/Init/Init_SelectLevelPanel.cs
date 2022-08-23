@@ -19,6 +19,7 @@ public class Init_SelectLevelPanel : BasePanel
 
     public List<Text> textList;
     [SerializeField] private List<int> completeCakes = new List<int>(3);
+    [SerializeField] private List<int> curCakes = new List<int>(3);
 
     Vector3 tmpScaleBack;
 
@@ -29,20 +30,19 @@ public class Init_SelectLevelPanel : BasePanel
         base.Awake();
         tmpScaleBack = rectTransformBack.localScale;
 
-        //更新蛋糕收集进度
+        //更新每一关的蛋糕收集进度
         GameData_SO gameData_SO = GameManager_global.GetInstance().gameData_SO;
-        int curCakes = 0;
         for (int i = 0; i < gameData_SO.ach_5_Allcake.cakesGet.Count; i++)
         {
+            ++completeCakes[gameData_SO.ach_5_Allcake.cakes[i].level];
             if (gameData_SO.ach_5_Allcake.cakesGet[i] == true)
             {
-                ++curCakes;
-                ++completeCakes[gameData_SO.ach_5_Allcake.cakes[i].level];
+                ++curCakes[gameData_SO.ach_5_Allcake.cakes[i].level];
             }
         }
         for (int i = 0; i < gameData_SO.levelRecords.Count; i++)
         {
-            textList[i].text = curCakes.ToString() + "/" + completeCakes[i].ToString();
+            textList[i].text = curCakes[i].ToString() + "/" + completeCakes[i].ToString();
         }
     }
 
@@ -128,6 +128,7 @@ public class Init_SelectLevelPanel : BasePanel
     }
     protected override void OnClick(string btnName)
     {
+        base.OnClick(btnName);
         switch (btnName)
         {
             case "Button1":
@@ -147,6 +148,9 @@ public class Init_SelectLevelPanel : BasePanel
     public void ClickLevel(int levelIndex)
     {
         Debug.Log("ClickLevel " + levelIndex);
+
+        //clear关卡记录
+        GameManager_global.GetInstance().gameData_SO.ClearLevelRecordsAndReverseAbility();
 
         GameManager_global.GetInstance().gameData_SO.lastLevel = levelIndex;
 

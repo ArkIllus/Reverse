@@ -1,3 +1,4 @@
+#if UNITY_EDITOR //在打包时记得添加
 using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -219,3 +220,4 @@ namespace Plugins._01_PrefabTileMap
         }
     }
 }
+#endif //在打包时记得添加

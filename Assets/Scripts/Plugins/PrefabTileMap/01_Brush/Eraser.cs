@@ -1,3 +1,4 @@
+#if UNITY_EDITOR //在打包时记得添加
 namespace Plugins._01_PrefabTileMap._01_Brush
 {
     public class Eraser : Brush
@@ -18,3 +19,4 @@ namespace Plugins._01_PrefabTileMap._01_Brush
         }
     }
 }
+#endif //在打包时记得添加

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 874563452577026378}
   - component: {fileID: 874563452577026377}
   - component: {fileID: 874563452577026380}
-  - component: {fileID: 7254655292371194927}
   m_Layer: 6
   m_Name: Env_2
   m_TagString: Untagged
@@ -97,36 +96,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d78a9e0b0d032b43a330e1fd2245f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHorizontalSpeed: 0
-  _currentVerticalSpeed: 0
-  _characterBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0.5, y: 0.5, z: 0}
-  _otherLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  _detectorCount: 3
-  _detectionRayLength: 0.1
-  _rayBuffer: 0.1
-  _colUp_other: 0
-  _colRight_other: 0
-  _colDown_other: 0
-  _colLeft_other: 0
---- !u!114 &7254655292371194927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874563452577026376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4bf1e8525d694f4cbb2b3ab12abe519, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  map: {fileID: 0}
-  gridPos: {x: 0, y: 0}
-  isTempHide: 0
 --- !u!1 &874563452666037891
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,18 +139,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d78a9e0b0d032b43a330e1fd2245f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHorizontalSpeed: 0
-  _currentVerticalSpeed: 0
-  _characterBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  _otherLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  _detectorCount: 3
-  _detectionRayLength: 0.1
-  _rayBuffer: 0.1
-  _colUp_other: 0
-  _colRight_other: 0
-  _colDown_other: 0
-  _colLeft_other: 0

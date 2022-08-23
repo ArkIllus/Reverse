@@ -14,9 +14,11 @@ public class Ach_5_allcake : Achievement_SO
     {
         for (int i = 0; i < cakes.Count; i++)
         {
-            if (e_Cake == cakes[i] && cakesGet[i] == false)
+            //关于==和重载的问题
+            if (e_Cake == cakes[i] && cakesGet[i] == false) //获取之前从未获取过的蛋糕时，才更新
             {
                 cakesGet[i] = true;
+                UpdateMe(1);
                 return;
             }
         }

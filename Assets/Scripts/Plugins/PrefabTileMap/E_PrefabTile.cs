@@ -1,3 +1,5 @@
+#if UNITY_EDITOR //在打包时记得添加
+
 using TinyCeleste._04_Extension._01_UnityComponent;
 using UnityEditor;
 using UnityEngine;
@@ -89,3 +91,4 @@ namespace Plugins._01_PrefabTileMap
         }
     }
 }
+#endif //在打包时记得添加

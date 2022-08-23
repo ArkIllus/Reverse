@@ -13,5 +13,29 @@ MonoBehaviour:
   m_Name: Ach_5_allcake
   m_EditorClassIdentifier: 
   currentAmount: 0
-  completeAmount: 9
+  completeAmount: 10
   isComplete: 0
+  acName: "\u751C\u54C1\u8FBE\u4EBA"
+  acIndex: 4
+  cakes:
+  - level: 0
+    index: 0
+  - level: 0
+    index: 1
+  - level: 1
+    index: 0
+  - level: 1
+    index: 1
+  - level: 1
+    index: 2
+  - level: 1
+    index: 3
+  - level: 2
+    index: 0
+  - level: 2
+    index: 1
+  - level: 2
+    index: 2
+  - level: 2
+    index: 3
+  cakesGet: 00000000000000000000

@@ -12,12 +12,16 @@ public class Test
     public static string url = "http://192.168.7.230:9090/minigame/user";
     public static string ip = "192.168.7.230";
     public static int port = 9092;
-    public static int uid = 10047966;
+    public static int uid = 10041463;
 
     public static string username = "testname";
     public static int profid = 11;
     public static string bio = "testbio";
-    public static int score = 1000;
+    public static int firstmeet = 1;
+    public static int overload = 1;
+    public static int pass = 1;
+    public static int cake = 1;
+    public static int firstmagic = 1;
 }
 
 
@@ -58,9 +62,21 @@ public class test_GUI : MonoBehaviour
         {
             AchievementData adata = client.GetAchievementData(Test.uid);
         }
-        if(GUI.Button(new Rect(120, 340, 100, 100), "UpdataAchievementData"))
+        if(GUI.Button(new Rect(120, 340, 100, 100), "UpdateAchievementData"))
         {
-            client.UpdataAchievementData(Test.uid, Test.score);
+            client.UpdateAchievementData(Test.uid, Test.firstmeet, Test.overload, Test.pass, Test.cake, Test.firstmagic);
+        }
+
+        if(GUI.Button(new Rect(400, 10, 100, 100), "GetHurdleData"))
+        {
+            HurdleData hdata = client.GetHurdleData(Test.uid);
+        }
+        if(GUI.Button(new Rect(510, 10, 100, 100), "UpdateHurdleData"))
+        {
+            OneHurdleData level1 = TcpMessage.InitOneHurdleData(float.Parse("1.0"), float.Parse("1.0"), float.Parse("1.0"), false, 10);
+            OneHurdleData level2 = TcpMessage.InitOneHurdleData(float.Parse("11.0"), float.Parse("1.0"), float.Parse("1.0"), false, 100);
+            OneHurdleData level3 = TcpMessage.InitOneHurdleData(float.Parse("111.0"), float.Parse("1.0"), float.Parse("1.0"), false, 1000);
+            client.UpdateHurdleData(Test.uid, level1, level2, level3);
         }
     }
 }
